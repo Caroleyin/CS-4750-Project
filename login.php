@@ -1,5 +1,20 @@
-<!-- include database connection -->
+<!-- php code to handle login -->
+<?php
+require("connect-db.php");
+session_start();
 
+
+if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
+    // get username and password
+    $username = $_POST["username"];
+    $password = $_POST["password"];
+
+    // continue the validating username + password and checking
+
+}
+?>
+
+<!-- html code for login page -->
 <!DOCTYPE html>
 <html>
 <head>
@@ -16,12 +31,3 @@
     </form>
 </body>
 </html>
-
-<!-- php code to handle login -->
-<?php
-if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
-    // get username and password
-    $username = $_POST["username"];
-    $password = $_POST["password"];
-
-}
