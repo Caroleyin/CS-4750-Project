@@ -30,19 +30,19 @@
 ////////////////////////////////////////////
 
 /** S24, PHP (on GCP, local XAMPP, or CS server) connect to MySQL (on local XAMPP) **/
+// $username = 'gmf5dzw';
+// $password = 'Spring2024';
+// $host = 'localhost:3306';
+// $dbname = 'template';
+// $dsn = "mysql:host=$host;dbname=$dbname";  
+////////////////////////////////////////////
+
+/** S24, PHP (on GCP, local XAMPP, or CS server) connect to MySQL (on CS server) **/
 $username = 'gmf5dzw';
 $password = 'Spring2024';
 $host = 'mysql01.cs.virginia.edu';
 $dbname = 'gmf5dzw';    
-$dsn = "mysql:host=$host;dbname=$dbname";  
-////////////////////////////////////////////
-
-/** S24, PHP (on GCP, local XAMPP, or CS server) connect to MySQL (on CS server) **/
-// $username = 'your-computingID'; 
-// $password = 'your-mysql-password';
-// $host = 'mysql01.cs.virginia.edu';
-// $dbname = 'your-computingID';
-// $dsn = "mysql:host=$host;dbname=$dbname";
+$dsn = "mysql:host=$host;dbname=$dbname"; 
 
 ////////////////////////////////////////////
 
