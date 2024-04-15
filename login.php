@@ -1,7 +1,7 @@
 <!-- php code to handle login -->
 <?php
 require("connect-db.php");
-// session_start();
+session_start();
 
 
 if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
@@ -20,7 +20,6 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
         $user = $result->fetch_assoc();
         // check if the password is correct
         if (password_verify($password, $user["password"])) {
-            session_start();
             $_SESSION["username"] = $username;
             header("Location: homepage.php"); // redirect to homepage
             exit();
