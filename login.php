@@ -1,7 +1,7 @@
 <!-- php code to handle login -->
 <?php
 require("connect-db.php");
-session_start();
+// session_start();
 
 
 if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
@@ -9,22 +9,28 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
     $username = $_POST["username"];
     $password = $_POST["password"];
 
-    // continue the validating username + password and checking
-    // validate credentials
-    // validate password
+    // prepare SQL statement to fetch user based on username
+    $stmt = $conn->prepare("SELECT * FROM users WHERE username = ?");
+    $stmt->bind_param("s", $username);
+    $stmt->execute();
+    $result = $stmt->get_result();
+
+    // validate username and password entered exist in database and are correct
     if ($result ->num_rows == 1) {
         $user = $result->fetch_assoc();
+        // check if the password is correct
         if (password_verify($password, $user["password"])) {
-            // password correct
-            // session_start() ??
+            session_start();
             $_SESSION["username"] = $username;
             header("Location: homepage.php"); // redirect to homepage
             exit();
         } else {
-        echo "This account does not exist or there is an invalid username or password";
+            echo "This account does not exist or there is an invalid username or password";
         }
     
     // close statment and database connection
+    $stmt->close();
+    $conn->close();
 
     }
 }
