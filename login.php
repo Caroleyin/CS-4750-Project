@@ -10,8 +10,21 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
     $password = $_POST["password"];
 
     // continue the validating username + password and checking
-
-}
+    // validate credentials
+    // validate password
+    if ($result ->num_rows == 1) {
+        $user = $result->fetch_assoc();
+        if (password_verify($password, $user["password"])) {
+            // password correct
+            // session_start() ??
+            $_SESSION["username"] = $username;
+            header("Location: homepage.php"); // redirect to homepage
+            exit();
+        } else {
+        echo "Invalid username or password";
+        }
+    
+    // close statment and database connection
 ?>
 
 <!-- html code for login page -->
