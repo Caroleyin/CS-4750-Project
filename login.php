@@ -21,10 +21,13 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
             header("Location: homepage.php"); // redirect to homepage
             exit();
         } else {
-        echo "Invalid username or password";
+        echo "This account does not exist or there is an invalid username or password";
         }
     
     // close statment and database connection
+
+    }
+}
 ?>
 
 <!-- html code for login page -->
