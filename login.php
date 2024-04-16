@@ -13,8 +13,11 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
     $stmt = $conn->prepare("SELECT * FROM Users WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
+    // check for errors
+    if ($stmt->error) {
+        die("Database error: ". $stmt->error);
+    }
     $result = $stmt->get_result();
-
     // validate username and password entered exist in database and are correct
     if ($result ->num_rows == 1) {
         $user = $result->fetch_assoc();
