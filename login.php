@@ -1,7 +1,7 @@
 <!-- php code to handle login -->
 <?php
 require("connect-db.php");
-// session_start();
+session_start();
 
 
 if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
@@ -10,33 +10,32 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
     $password = $_POST["password"];
 
     // var_dump to inspect variables
-    var_dump($username, $password);
+    // var_dump($username, $password);
 
     // prepare SQL statement to fetch user based on username
     $stmt = $conn->prepare("SELECT * FROM Users WHERE username = ?");
     $stmt->bind_param("s", $username);
     $stmt->execute();
-    // check for errors
-    if ($stmt->error) {
-        die("Database error: ". $stmt->error);
-    }
     $result = $stmt->get_result();
-    echo ("testing results of database");
-    var_dump($result);
+    
+    // debugging: output results to see if query works
+    // while ($row = $result->fetch_assoc()) {
+    //     var_dump($row);
+    // }
 
     // validate username and password entered exist in database and are correct
     if ($result ->num_rows == 1) {
         // var dump to see query result
-        var_dump($result);
+        // var_dump($result);
 
         $user = $result->fetch_assoc();
-        var_dump($user);
+        // var_dump($user);
 
         // check if the password is correct
         if (password_verify($password, $user["password"])) {
-            session_start();
+            // session_start();
             $_SESSION["username"] = $username;
-            echo "Logged in successfully";
+            // echo "Logged in successfully";
             header("Location: homepage.php"); // redirect to homepage
             exit();
         } else {
