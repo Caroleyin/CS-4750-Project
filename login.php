@@ -9,6 +9,9 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
     $username = $_POST["username"];
     $password = $_POST["password"];
 
+    // var_dump to inspect variables
+    var_dump($username, $password);
+
     // prepare SQL statement to fetch user based on username
     $stmt = $conn->prepare("SELECT * FROM Users WHERE username = ?");
     $stmt->bind_param("s", $username);
@@ -18,17 +21,26 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
         die("Database error: ". $stmt->error);
     }
     $result = $stmt->get_result();
+    echo ("testing results of database");
+    var_dump($result);
+
     // validate username and password entered exist in database and are correct
     if ($result ->num_rows == 1) {
+        // var dump to see query result
+        var_dump($result);
+
         $user = $result->fetch_assoc();
+        var_dump($user);
+
         // check if the password is correct
         if (password_verify($password, $user["password"])) {
             session_start();
             $_SESSION["username"] = $username;
+            echo "Logged in successfully";
             header("Location: homepage.php"); // redirect to homepage
             exit();
         } else {
-            echo "This account does not exist or there is an invalid username or password";
+            echo "Password entered is invalid";
         }
     }
     else {
