@@ -26,12 +26,12 @@
         <?php
         //database connection parameters
         //check connection
-        if ($conn->connect_error) {
+        if (db->connect_error) {
             die("Connection failed: ". $conn->connect_error);
         }
         // fetch grocery items from database
         $sql = "SELECT ingredient FROM grocery_list";
-        $result = $conn->query($sql);
+        $result = $db->query($sql);
 
         // display grocery items in unordered list
         if ($result->num_rows > 0) {
