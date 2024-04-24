@@ -11,34 +11,19 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
         $username = $_POST["username"];
         $password = $_POST["password"];
 
-        // var_dump to inspect variables 
-        //var_dump($username, $password);
-       //print_r($_POST);
-        echo "a";
         // prepare SQL statement to fetch user based on username
-        $stmt = $db->prepare("SELECT * FROM Users WHERE username = ?");
-        echo "2";
-        $stmt->bindParam("s", $username);
+        $stmt = $db->prepare("SELECT * FROM Users WHERE username=?");
+        $stmt->bindParam(1, $username);
+        $stmt->execute();
         $result = $stmt->fetch();
-        echo "c";
 
-        // validate username and password entered exist in database and are correct
-        echo $result;
-        if ($result) { // this doesn't work
-            echo "d";
-            // var dump to see query result
-            // var_dump($result);
-
-            $user = $result->fetch_assoc();
-            // var_dump($user);
+        if ($result) {
+            $user = $result;
 
             // check if the password is correct
-            if (password_verify($password, $user["password"])) {
-                // session_start();
+            // incorporate later for hashing: if (password_verify($password, $user["password"])) {
+            if ($password === $user["password"]) {
                 $_SESSION["username"] = $username;
-                echo "Logged in successfully";
-            //  $stmt->close();
-            //  $conn->close();
                 header("Location: homepage.php"); // redirect to homepage
                 exit;
             } else {
