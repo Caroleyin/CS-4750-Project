@@ -11,6 +11,9 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
         $username = $_POST["username"];
         $password = $_POST["password"];
 
+        // password hashing for database security
+        // $hashpassword = password_hash($password, PASSWORD_DEFAULT);
+
         // prepare SQL statement to fetch user based on username
         $stmt = $db->prepare("SELECT * FROM Users WHERE username=?");
         $stmt->bindParam(1, $username);
@@ -21,8 +24,8 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
             $user = $result;
 
             // check if the password is correct
-            // incorporate later for hashing: if (password_verify($password, $user["password"])) {
-            if ($password === $user["password"]) {
+            // if (password_verify($password, $user["password"])) {
+            if ($password === $user["password"]) { // for non-hashed password
                 $_SESSION["username"] = $username;
                 header("Location: homepage.php"); // redirect to homepage
                 exit;
