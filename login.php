@@ -1,58 +1,59 @@
 <!-- php code to handle login -->
 <?php
+
+global $stmt;
+
 require("connect-db.php");
 session_start();
 
-
 if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
-    // get username and password
-    $username = $_POST["username"];
-    $password = $_POST["password"];
+        // get username and password
+        $username = $_POST["username"];
+        $password = $_POST["password"];
 
-    // var_dump to inspect variables
-    // var_dump($username, $password);
+        // var_dump to inspect variables 
+        //var_dump($username, $password);
+       //print_r($_POST);
+        echo "a";
+        // prepare SQL statement to fetch user based on username
+        $stmt = $db->prepare("SELECT * FROM Users WHERE username = ?");
+        echo "2";
+        $stmt->bindParam("s", $username);
+        $result = $stmt->fetch();
+        echo "c";
 
-    // prepare SQL statement to fetch user based on username
-    $stmt = $conn->prepare("SELECT * FROM Users WHERE username = ?");
-    $stmt->bind_param("s", $username);
-    $stmt->execute();
-    $result = $stmt->get_result();
-    
-    // debugging: output results to see if query works
-    // while ($row = $result->fetch_assoc()) {
-    //     var_dump($row);
-    // }
+        // validate username and password entered exist in database and are correct
+        echo $result;
+        if ($result) { // this doesn't work
+            echo "d";
+            // var dump to see query result
+            // var_dump($result);
 
-    // validate username and password entered exist in database and are correct
-    if ($result ->num_rows == 1) {
-        // var dump to see query result
-        // var_dump($result);
+            $user = $result->fetch_assoc();
+            // var_dump($user);
 
-        $user = $result->fetch_assoc();
-        // var_dump($user);
-
-        // check if the password is correct
-        if (password_verify($password, $user["password"])) {
-            // session_start();
-            $_SESSION["username"] = $username;
-            // echo "Logged in successfully";
-            $stmt->close();
-            $conn->close();
-            header("Location: homepage.php"); // redirect to homepage
-            exit();
-        } else {
-            echo "Password entered is invalid";
+            // check if the password is correct
+            if (password_verify($password, $user["password"])) {
+                // session_start();
+                $_SESSION["username"] = $username;
+                echo "Logged in successfully";
+            //  $stmt->close();
+            //  $conn->close();
+                header("Location: homepage.php"); // redirect to homepage
+                exit;
+            } else {
+                echo "Password entered is invalid";
+            } 
         }
+        else {
+            echo "This account does not exist or there is an invalid username or password";
+        }
+        
+        // close statment and database connection
+        $stmt->close();
+        $conn->close();
     }
-    else {
-        echo "This account does not exist or there is an invalid username or password";
-    }
-    
-    // close statment and database connection
-    $stmt->close();
-    $conn->close();
 
-}
 ?>
 
 <!-- html code for login page -->
