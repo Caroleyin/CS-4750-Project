@@ -36,6 +36,8 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
             // session_start();
             $_SESSION["username"] = $username;
             // echo "Logged in successfully";
+            $stmt->close();
+            $conn->close();
             header("Location: homepage.php"); // redirect to homepage
             exit();
         } else {
