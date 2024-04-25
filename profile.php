@@ -46,7 +46,7 @@ else { // user is not logged in
     </ul>
     
     <h3>Change Password</h3>
-    <form method="post" action="change_password.php">
+    <form method="post" action="change-password.php">
         <label for="current_password">Current Password:</label>
         <input type="password" id="current_password" name="current_password" required><br><br>
         <label for="new_password">New Password:</label>
