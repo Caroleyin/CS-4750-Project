@@ -2,6 +2,9 @@
 <!-- included in navigation bar -->
 
 <?php
+
+global $stmt;
+
 require("connect-db.php");
 session_start();
 
@@ -14,15 +17,15 @@ if (!isset($_SESSION["username"])) {
 
 // Retrieve user information from database
 $username = $_SESSION["username"];
-$stmt = $conn->prepare("SELECT * FROM Users WHERE username = ?");
-$stmt->bind_param("s", $username);
+$stmt = $db->prepare("SELECT * FROM Users WHERE username=?");
+$stmt->bind_param(1, $username);
 $stmt->execute();
-$result = $stmt->get_result();
+$result = $stmt->fetch();
 $user = $result->fetch_assoc();
 
 // Close statement and database connection
 $stmt->close();
-$conn->close();
+$db->close();
 ?>
 
 <!DOCTYPE html>

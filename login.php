@@ -39,7 +39,7 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
         
         // close statment and database connection
         $stmt->close();
-        $conn->close();
+        $db->close();
     }
 
 ?>
