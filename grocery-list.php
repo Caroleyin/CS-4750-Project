@@ -1,16 +1,39 @@
 <!-- includes the grocery list for the user who is currently logged -->
 <!-- will also pull from the ingredients list table -->
-<!-- included in navigation bar -->
 
-<!-- users will be able to scroll down grocery list, update the amounts of the groceries, and delete -->
+<!-- users will be able to scroll down grocery list, 
+update the amounts of the groceries, and delete -->
 
-<!-- update amounts -->
+<?php
+       
+require "connect-db.php";
+session_start();
 
-<!-- delete item from list-->
+// fetch grocery items from database
+$stmt = $db->prepare("SELECT * FROM Grocery_List WHERE ingredientsInList=?");
+// issue configuring with grocery list in database
+        $stmt->bindParam(1, $ingredientsInList);
+        $stmt->execute();
+        $result = $stmt->fetch(); // this works
 
-<!-- manually add item to list -->
+// display grocery items in unordered list
+if ($result) {
+    while ($result->num_rows > 0) {
+            // fix this
+            echo "<li>". $row["ingredient"]. "</li>";
+        }
+    }
+    else {
+        echo "No items found in the grocery list";
+    }
 
-<!-- order list by category? -->
+    // for each item in grocery list
+        // display item
+
+    // delete item from list
+
+    $conn->close();
+    ?>
 
 <!DOCTYPE html>
 <html lang="en">
@@ -26,37 +49,4 @@
         <a href="my-recipes.php">My Recipes</a>
         <a href="profile.php">Profile</a>
     <h1>My Grocery List</h1>
-
-    <ul>
-        <?php
-        //database connection parameters
-        //check connection
-        if (db->connect_error) {
-            die("Connection failed: ". $conn->connect_error);
-        }
-        // fetch grocery items from database
-        $sql = "SELECT ingredient FROM grocery_list";
-        $result = $db->query($sql);
-
-        // display grocery items in unordered list
-        if ($result->num_rows > 0) {
-            while ($result->num_rows > 0) {
-                echo "<li>". $row["ingredient"]. "</li>";
-            }
-        }
-        else {
-            echo "No items found in the grocery list";
-        }
-
-        // fetch grocery items from grocery page
-        // add to unordered list
-
-
-        $conn->close();
-        ?>
-    </ul>
-    <script>
-
-
-</body>
 </html>

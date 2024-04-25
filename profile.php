@@ -2,27 +2,29 @@
 <!-- included in navigation bar -->
 
 <?php
+
+global $stmt;
+
 require("connect-db.php");
 session_start();
 
-// Check if user is logged in
-if (!isset($_SESSION["username"])) {
-    // Redirect to login page if user is not logged in
+if ($_SESSION["username"]) {
+    // Retrieve user information from database
+    $username = $_SESSION["username"];
+    $stmt = $db->prepare("SELECT * FROM Users WHERE username=?");
+    $stmt->bindParam(1, $username);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    $user = $result;
+
+    // Close statement and database connection
+    //$stmt->close();
+   // $db->close();
+}
+else { // user is not logged in
     header("Location: login.php");
     exit();
 }
-
-// Retrieve user information from database
-$username = $_SESSION["username"];
-$stmt = $conn->prepare("SELECT * FROM Users WHERE username = ?");
-$stmt->bind_param("s", $username);
-$stmt->execute();
-$result = $stmt->get_result();
-$user = $result->fetch_assoc();
-
-// Close statement and database connection
-$stmt->close();
-$conn->close();
 ?>
 
 <!DOCTYPE html>
@@ -44,7 +46,7 @@ $conn->close();
     </ul>
     
     <h3>Change Password</h3>
-    <form method="post" action="change_password.php">
+    <form method="post" action="change-password.php">
         <label for="current_password">Current Password:</label>
         <input type="password" id="current_password" name="current_password" required><br><br>
         <label for="new_password">New Password:</label>
