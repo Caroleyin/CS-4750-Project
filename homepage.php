@@ -2,16 +2,13 @@
 <!-- the recipes will be pulled from recipes other users have posted -->
 <!-- included in navigation bar as Home -->
 <!-- after login the user will be initially directed here -->
-<!-- php code to handle login -->
-<?php
-require("connect-db.php");
-?>
 
-<!-- html code for home page -->
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <title>Home Page</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Homepage</title>
 </head>
 
 <body>
@@ -59,4 +56,5 @@ require("connect-db.php");
 
 </body>
 </html>
+
 
