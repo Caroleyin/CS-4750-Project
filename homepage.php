@@ -34,15 +34,12 @@
         $stmt = $db->prepare("SELECT recipe_ID, recipe_name FROM Recipe");
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        // display grocery items in unordered list
 
         if ($result) {
-            echo ('in result');
             foreach ($result as $row) {
-                echo ('in foreach');
                 $recipe_ID = $row["recipe_ID"];
-                echo "<h1>". $row["recipe_name"]. "</h1>";
-                // echo '<a href="recipe-info.php?val=' . $recipe_ID. '">go to recipe page!</a>';
+                echo "<h2>". $row["recipe_name"]. "</h2>";
+                echo '<a href="recipe-info.php?val=' . $recipe_ID. '">go to recipe page!</a>';
                 // echo "<ul id=recipe-list class=recipe-list>";
                 // echo "<li>". $row["calories"]. "</li>";
                 // echo "<li>". $row["prep_time"]. "</li>";
