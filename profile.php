@@ -18,10 +18,10 @@ if (!isset($_SESSION["username"])) {
 // Retrieve user information from database
 $username = $_SESSION["username"];
 $stmt = $db->prepare("SELECT * FROM Users WHERE username=?");
-$stmt->bind_param(1, $username);
+$stmt->bindParam(1, $username);
 $stmt->execute();
 $result = $stmt->fetch();
-$user = $result->fetch_assoc();
+$user = $result;
 
 // Close statement and database connection
 $stmt->close();
