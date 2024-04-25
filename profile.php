@@ -8,24 +8,23 @@ global $stmt;
 require("connect-db.php");
 session_start();
 
-// Check if user is logged in
-if (!isset($_SESSION["username"])) {
-    // Redirect to login page if user is not logged in
+if ($_SESSION["username"]) {
+    // Retrieve user information from database
+    $username = $_SESSION["username"];
+    $stmt = $db->prepare("SELECT * FROM Users WHERE username=?");
+    $stmt->bindParam(1, $username);
+    $stmt->execute();
+    $result = $stmt->fetch();
+    $user = $result;
+
+    // Close statement and database connection
+    //$stmt->close();
+   // $db->close();
+}
+else { // user is not logged in
     header("Location: login.php");
     exit();
 }
-
-// Retrieve user information from database
-$username = $_SESSION["username"];
-$stmt = $db->prepare("SELECT * FROM Users WHERE username=?");
-$stmt->bindParam(1, $username);
-$stmt->execute();
-$result = $stmt->fetch();
-$user = $result;
-
-// Close statement and database connection
-$stmt->close();
-$db->close();
 ?>
 
 <!DOCTYPE html>
