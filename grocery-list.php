@@ -10,12 +10,16 @@ require "connect-db.php";
 session_start();
 
 // fetch grocery items from database
-$sql = "SELECT ingredient FROM grocery_list";
-$result = $db->query($sql);
+//$sql = "SELECT ingredient FROM grocery_list";
+//$result = $db->query($sql); // issue here
+$stmt = $db->prepare("SELECT * FROM Grocery_List WHERE grocery_List_ID=?");
+        $stmt->bindParam(1, $grocery_List_ID);
+        $stmt->execute();
+        $result = $stmt->fetch();
 
 // display grocery items in unordered list
-if ($result->num_rows > 0) {
-     while ($result->num_rows > 0) {
+if ($result) {
+    while ($result->num_rows > 0) {
             echo "<li>". $row["ingredient"]. "</li>";
         }
     }
@@ -23,8 +27,6 @@ if ($result->num_rows > 0) {
         echo "No items found in the grocery list";
     }
 
-    // fetch grocery items from grocery page
-    // add to unordered list
 
     // manually add item to list
 
