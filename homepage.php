@@ -38,7 +38,7 @@
                 $recipe_ID = $row["recipe_ID"];
                 echo "<h1>". $row["recipe_name"]. "</h1>";
                 echo '<a href="recipe-info.php?val=' . $recipe_ID. '">go to recipe page!</a>';
-                echo "<ul id="recipe-list" class="recipe-list">";
+                echo "<ul id=recipe-list class=recipe-list>";
                 echo "<li>". $row["calories"]. "</li>";
                 echo "<li>". $row["prep_time"]. "</li>";
                 echo "<li>". $row["type_of_meal"]. "</li>";
