@@ -9,7 +9,6 @@
 
     <ul>
         <?php
-        //database connection parameters
         //check connection
         if (db->connect_error) {
             die("Connection failed: ". $conn->connect_error);
@@ -23,3 +22,9 @@
 
 </head>
 <body>
+</html>
+
+// comments/reviews
+// add ingredients from recipe to grocery list 
+        // for each ingredient in recipe
+        // add to grocery list
