@@ -36,7 +36,7 @@
         if ($result->num_rows > 0) {
             while ($result->num_rows > 0) {
                 <ul id="recipe-list" class="recipe-list">
-                echo "<h1>". $row["recipe_name"]. "</h1>";
+                <a href="recipe-info.php?val=$row["recipe_ID"]"> <"</h1>". $row["recipe_name"]. "</h1>"</a>;
                 echo "<l1>". $row["calories"]. "</l1>";
                 echo "<l1>". $row["prep_time"]. "</l1>";
                 echo "<l1>". $row["type_of_meal"]. "</l1>";
