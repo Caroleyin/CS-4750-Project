@@ -34,13 +34,15 @@
 
         // display grocery items in unordered list
         if ($result->num_rows > 0) {
-            while ($result->num_rows > 0) {
-                <ul id="recipe-list" class="recipe-list">
-                <a href="recipe-info.php?val=$row["recipe_ID"]"> <"</h1>". $row["recipe_name"]. "</h1>"</a>;
-                echo "<l1>". $row["calories"]. "</l1>";
-                echo "<l1>". $row["prep_time"]. "</l1>";
-                echo "<l1>". $row["type_of_meal"]. "</l1>";
-                </ul>
+            while ($row = fetch_assoc()) {
+                $recipe_ID = $row["recipe_ID"];
+                echo "<h1>". $row["recipe_name"]. "</h1>";
+                echo '<a href="recipe-info.php?val=' . $recipe_ID. '">go to recipe page!</a>';
+                echo "<ul id="recipe-list" class="recipe-list">";
+                echo "<li>". $row["calories"]. "</li>";
+                echo "<li>". $row["prep_time"]. "</li>";
+                echo "<li>". $row["type_of_meal"]. "</li>";
+                "</ul>";
             }
         }
         else {
