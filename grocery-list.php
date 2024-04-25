@@ -10,15 +10,16 @@ require "connect-db.php";
 session_start();
 
 // fetch grocery items from database
-$stmt = $db->prepare("SELECT * FROM Grocery_List WHERE grocery_List_ID=?");
+$stmt = $db->prepare("SELECT * FROM Grocery_List WHERE ingredientsInList=?");
 // issue configuring with grocery list in database
-        $stmt->bindParam(1, $grocery_List_ID);
+        $stmt->bindParam(1, $ingredientsInList);
         $stmt->execute();
         $result = $stmt->fetch(); // this works
 
 // display grocery items in unordered list
 if ($result) {
     while ($result->num_rows > 0) {
+            // fix this
             echo "<li>". $row["ingredient"]. "</li>";
         }
     }
