@@ -20,6 +20,11 @@
     <title>My Grocery List</title>
 </head>
 <body>
+    <div class="navbar">
+        <a href="homepage.php">Home</a>
+        <a href="grocery-list.php">Grocery List</a>
+        <a href="my-recipes.php">My Recipes</a>
+        <a href="profile.php">Profile</a>
     <h1>My Grocery List</h1>
 
     <ul>

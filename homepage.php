@@ -11,6 +11,11 @@
     <title>Homepage</title>
 </head>
 <body>
+    <div class="navbar">
+        <a href="homepage.php">Home</a>
+        <a href="grocery-list.php">Grocery List</a>
+        <a href="my-recipes.php">My Recipes</a>
+        <a href="profile.php">Profile</a>
     <h1>My Homepage</h1>
 
     <ul>
