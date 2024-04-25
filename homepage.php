@@ -23,28 +23,23 @@
         <?php
         require('connect-db.php');
         session_start();
-        echo('in php');
+
         //database connection parameters
         //check connection
         if ($db->connect_error) {
             die("Connection failed: ". $db->connect_error);
         }
 
-        $db->close();
-
         // prepare SQL statement to fetch user based on username
-        echo('first');
         $stmt = $db->prepare("SELECT recipe_ID, recipe_name FROM Recipe");
-        echo('second');
         $stmt->execute();
-        echo ('a');
-        $result = $stmt->fetch();
-        echo ('b');
+        $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
         // display grocery items in unordered list
+
         if ($result) {
             echo ('in result');
-            while ($row = $result->fetch_assoc()) {
-                echo ('in while');
+            foreach ($result as $row) {
+                echo ('in foreach');
                 $recipe_ID = $row["recipe_ID"];
                 echo "<h1>". $row["recipe_name"]. "</h1>";
                 // echo '<a href="recipe-info.php?val=' . $recipe_ID. '">go to recipe page!</a>';
