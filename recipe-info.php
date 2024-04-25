@@ -5,8 +5,8 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title></title>
-
+<link rel="stylesheet" href="recipe-info.css"> 
+<title>Recipe Page</title>
     <ul>
         <?php
         //database connection parameters
@@ -14,6 +14,15 @@
         if (db->connect_error) {
             die("Connection failed: ". $conn->connect_error);
         }
+        if ($result->num_rows > 0) {
+            while ($result->num_rows > 0) {
+                $recipe_ID = _GET['recipe_ID']; 
+                $sql = "SELECT recipe_ID, recipe_name, calories, prep_time, type_Of_Meal FROM Recipe WHERE recipe_ID=$recipe_ID";
+                $result = $db->query($sql);
+            }
+        }
+
+
 
         $conn->close();
 
