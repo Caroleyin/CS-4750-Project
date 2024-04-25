@@ -13,9 +13,7 @@ require("connect-db.php");
 <head>
     <title>Home Page</title>
 </head>
-<<<<<<< Updated upstream
-</html>
-=======
+
 <body>
     <div class="navbar">
         <a href="homepage.php">Home</a>
@@ -61,4 +59,4 @@ require("connect-db.php");
 
 </body>
 </html>
->>>>>>> Stashed changes
+
