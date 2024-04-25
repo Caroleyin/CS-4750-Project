@@ -6,9 +6,12 @@ update the amounts of the groceries, and delete -->
 
 <?php
        
+require "connect-db.php";
+session_start();
+
 // fetch grocery items from database
- $sql = "SELECT ingredient FROM grocery_list";
- $result = $db->query($sql);
+$sql = "SELECT ingredient FROM grocery_list";
+$result = $db->query($sql);
 
 // display grocery items in unordered list
 if ($result->num_rows > 0) {
