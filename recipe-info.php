@@ -57,20 +57,6 @@
             echo '<p>Invalid recipe ID.</p>';
         }
 
-        $stmt2 = $db->prepare("SELECT number_Steps, instructions FROM Recipe NATURAL JOIN Has_A NATURAL JOIN Process WHERE recipe_ID=$recipe_ID");
-        $stmt2->execute();
-        $result3 = $stmt1->fetchAll(PDO::FETCH_ASSOC);
-
-        if ($result2) {
-            foreach ($result2 as $row) {
-                echo "<h2> Process </h2>";
-                echo "<p>". 'Number of Steps: '. $row["number_Steps"]. "</p>";
-                echo "<p>". $row["instructions"]. "</p>";
-            }
-        } else {
-            echo '<p>Invalid recipe ID.</p>';
-        }
-
 
 
         ?>
