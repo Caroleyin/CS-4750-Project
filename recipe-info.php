@@ -109,7 +109,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_SESSION["username"];
 
     $sql_comment= $db->prepare("INSERT INTO Review (`review_ID`, `username`, `recipe_ID`, `comment`, `star_Number`) VALUES (?, ?, ?, ?, ?)");
-    $sql_comment->execute(15, 'athy', $recipe_ID, $comment_text, $starNumber);
+    $sql_comment->execute(15, $username, $recipe_ID, $comment_text, $starNumber);
     //$sql_comment = "INSERT INTO Review ('review_ID', 'username', 'recipe_ID', 'comment', 'star_Number') VALUES (15, 'athy', $recipe_ID, $comment_text, $starNumber)";
 
     echo "this one";
