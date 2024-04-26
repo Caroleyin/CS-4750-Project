@@ -135,7 +135,26 @@
             echo '<p>Invalid recipe ID.</p>';
         }
 
+        $stmt2 = $db->prepare("SELECT name, amount FROM Recipe NATURAL JOIN Has NATURAL JOIN Lists NATURAL JOIN Ingredients WHERE recipe_ID=$recipe_ID");
+        $stmt2->execute();
+        $result3 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
+        echo "<h2> Ingredient List </h2>";
+
+
+        if ($result3) {
+            echo '<form method="post" action="' . htmlspecialchars($_SERVER['PHP_SELF'] . "?recipe_ID=" . $recipe_ID) .'">';
+            foreach ($result3 as $row) {
+                echo '<input type="checkbox" name="' . $row["name"] . '" value="' . $row["name"] . '">';
+                echo '<label for="' . $row["name"] . '">' . $row["name"] . '</label>';
+                echo '<br>';
+             }
+             echo '<br>';
+             echo '<button type="submit">Add to your Grocery List</button>';
+             echo '</form>';
+         } else {
+             echo '<p>Invalid recipe ID.</p>';
+     }
 
         ?>
         </div>
