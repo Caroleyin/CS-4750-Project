@@ -158,6 +158,8 @@
              echo '<p>Invalid recipe ID.</p>';
      }
 
+
+
         ?>
         </div>
     </ul>
@@ -206,20 +208,22 @@
     <?php
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
+        echo "here67";
+        //if (isset($_POST['submit_comment'])) {
+            echo "her1e67";
         $comment_text = $_POST["comment_text"];
         $starNumber = $_POST["starNumber"];
         $username = $_SESSION["username"];
-    }
-        $sql_comment= $db->prepare("INSERT INTO Review VALUES (15, '$username', $recipe_ID, '$comment_text', $starNumber)");
 
+       // }
+        }
+        $sql_comment= $db->prepare("INSERT INTO Review (username, recipe_ID, comment, star_Number) VALUES ('$username', $recipe_ID, '$comment_text', $starNumber)");
         if ($sql_comment->execute())  {
             echo "record inserted successfully";
         } else {
             echo "Error: " . $sql_comment . "<br>" . $conn->error;
         }
-        
-
-
+    
 $conn->close();
 
 ?>
