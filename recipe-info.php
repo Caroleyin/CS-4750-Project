@@ -3,7 +3,7 @@
 <!-- included in navigation bar -->
 
 <!DOCTYPE html>
-<html lang="en">>
+<html lang="en">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -19,7 +19,6 @@
 
     <ul>
         <?php
-        echo "here";
         require('connect-db.php');
         session_start();
         //database connection parameters
@@ -27,46 +26,39 @@
         if ($db->connect_error) {
             die("Connection failed: ". $db->connect_error);
         }
-        echo "here";
         $recipe_ID = $_GET['recipe_ID']; 
-        echo "here";
-
-        $stmt = $db->prepare("SELECT recipe_ID, recipe_name FROM Recipe WHERE recipe_ID = ?");
-        echo "123";
-        $stmt->bind_param("i", $recipe_ID);
-        echo "234";
-        $recipe_ID = $_GET['recipe_ID']; 
+        $stmt = $db->prepare("SELECT recipe_ID, recipe_name, calories, prep_Time, recipe_name, type_Of_Meal FROM Recipe WHERE recipe_ID = $recipe_ID");
+        //$stmt->bind_param("i", $recipe_ID);
         $stmt->execute();
         $result1 = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        echo "123";
-        $stmt1 = $db->prepare("SELECT numSteps, instructions FROM Recipe NATURAL JOIN HAS_A NATURAL JOIN Process WHERE recipe_ID=$recipe_ID");
-        $stmt1->execute();
-        $result2 = $stmt1->fetchAll(PDO::FETCH_ASSOC);
-        echo "234";
+
         if ($result1) {
             foreach ($result1 as $row) {
-                echo "<h1>". $row["recipe_name"]. "</h1>";
-                echo "<ul id=recipe-list class=recipe-list>";
-                echo "<li>". $row["calories"]. "</li>";
-                echo "<li>". $row["prep_time"]. "</li>";
-                echo "<li>". $row["type_of_meal"]. "</li>";
-                "</ul>";
+                echo "<h1>". htmlspecialchars($row["recipe_name"]). "</h1>";
+                echo "<p>". 'Calories: '. $row["calories"]. "</p>";
+                echo "<p>". 'Prep Time: '. $row["prep_Time"]. "</p>";
+                echo "<p>". 'Meal Type: '. $row["type_Of_Meal"]. "</p>";
             }
+        } else {
+            echo '<p>Invalid recipe ID.</p>';
         }
+
+        $stmt1 = $db->prepare("SELECT number_Steps, instructions FROM Recipe NATURAL JOIN Has_A NATURAL JOIN Process WHERE recipe_ID=$recipe_ID");
+        $stmt1->execute();
+        $result2 = $stmt1->fetchAll(PDO::FETCH_ASSOC);
 
         if ($result2) {
             foreach ($result2 as $row) {
-                echo "<h1> process </h1>";
-                echo "<ul id=process-list class=process-list>";
-                echo "<li>". $row["numSteps"]. "</li>";
-                echo "<li>". $row["instructions"]. "</li>";
-                "</ul>";
+                echo "<h1> Process </h1>";
+                echo "<p>". 'Number of Steps: '. $row["number_Steps"]. "</p>";
+                echo "<p>". $row["instructions"]. "</p>";
             }
+        } else {
+            echo '<p>Invalid recipe ID.</p>';
         }
 
-
-
         $conn->close();
+
 
         ?>
     </ul>
