@@ -109,12 +109,14 @@
         //$stmt->bind_param("i", $recipe_ID);
         $stmt->execute();
         $result1 = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
+//https://stackoverflow.com/questions/50567276/how-to-convert-time-format-mysql-to-hours-minutes 
         if ($result1) {
             foreach ($result1 as $row) {
+                $time = explode(':', $row["prep_Time"]);
+                $time_h_m = (int)$time[0] . ' hour(s) ' . (int)$time[1] . ' min(s)';
                 echo "<h1>". htmlspecialchars($row["recipe_name"]). "</h1>";
                 echo "<p>". 'Calories: '. $row["calories"]. "</p>";
-                echo "<p>". 'Prep Time: '. $row["prep_Time"]. "</p>";
+                echo "<p>". 'Prep Time: '. $time_h_m . "</p>";
                 echo "<p>". 'Meal Type: '. $row["type_Of_Meal"]. "</p>";
             }
         } else {
@@ -146,7 +148,7 @@
             echo '<form method="post" action="' . htmlspecialchars($_SERVER['PHP_SELF'] . "?recipe_ID=" . $recipe_ID) .'">';
             foreach ($result3 as $row) {
                 echo '<input type="checkbox" name="' . $row["name"] . '" value="' . $row["name"] . '">';
-                echo '<label for="' . $row["name"] . '">' . $row["name"] . '</label>';
+                echo '<label for="' . $row["name"] . '">' . $row["name"] . ' (' . (int)$row["amount"] . ')'. '</label>';
                 echo '<br>';
              }
              echo '<br>';
