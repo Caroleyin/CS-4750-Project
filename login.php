@@ -53,8 +53,8 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
     <title>Login Page</title>
     <style>
         body {
-            font-family: Georgia, 'Times New Roman', Times, serif
-            background-color: bisque;
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+            background-color: white;
             display: flex;
             justify-content: center;
             align-items: center;
@@ -63,7 +63,7 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
             padding: 0;
         }
         .login-container {
-            background-color: brown;
+            background-color: cornflowerblue;
             border-radius: 8px;
             box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
             padding: 30px;
@@ -75,7 +75,7 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
             color: darkgray;
         }
         .login-container button {
-            font-family: Georgia, 'Times New Roman', Times, serif
+            font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
             background-color: wheat;
             color: black;
             border: none;
