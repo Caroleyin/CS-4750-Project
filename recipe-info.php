@@ -57,12 +57,74 @@
             echo '<p>Invalid recipe ID.</p>';
         }
 
-        $conn->close();
 
 
         ?>
     </ul>
-    <script>
+
+<!-- Comments and Reviews -->
+    <h2>Comments/Reviews</h2>
+    <?php
+    // retrieve and display comments from the database
+    $comments_stmt = $db->prepare("SELECT username, star_Number, comment FROM Review WHERE recipe_ID = $recipe_ID");
+    $comments_stmt->execute();
+    $comments_result = $comments_stmt->fetchAll(PDO::FETCH_ASSOC); // idk if fetch is right
+
+    if ($comments_result) {
+        foreach ($comments_result as $row) {
+            echo "<p>" . 'usename: '. $row['username']. "</p>";
+            echo "<p>" . $row['comment']. "</p>";
+        }
+    }
+    else {
+        echo '<p>No comments yet. Be the first to leave a comment</p>';
+    }
+    // close cursor?
+    ?>
+    <!-- handle adding comments/reviews to database -->
+
+
+<h2>Leave a Comment</h2>
+<form method="post" action="<?php echo htmlspecialchars($_SERVER['PHP_SELF'] . "?recipe_ID=" . $recipe_ID); ?>">
+    <label for="rating">Rating (1-5): </label>
+    <select name="starNumber">
+    <option value="1">1</option>
+    <option value="2">2</option>
+    <option value="3">3</option>
+    <option value="4">4</option>
+    <option value="5">5</option>
+    </select> <br>
+    <br>
+    <label for="comment_text">Your comment:</label><br>
+    <textarea id="comment_text" name="comment_text" rows="4" cols="50" required></textarea><br><br>
+    <button type="submit" name="submit_comment">Submit Comment</button>
+</form>
+
+
+<?php
+
+if ($_SERVER["REQUEST_METHOD"] == "POST") {
+    $comment_text = $_POST["comment_text"];
+    $starNumber = $_POST["starNumber"];
+    $username = $_SESSION["username"];
+
+    $sql_comment= $db->prepare("INSERT INTO Review (`review_ID`, `username`, `recipe_ID`, `comment`, `star_Number`) VALUES (?, ?, ?, ?, ?)");
+    $sql_comment->execute(15, 'athy', $recipe_ID, $comment_text, $starNumber);
+    //$sql_comment = "INSERT INTO Review ('review_ID', 'username', 'recipe_ID', 'comment', 'star_Number') VALUES (15, 'athy', $recipe_ID, $comment_text, $starNumber)";
+
+    echo "this one";
+    if ($conn->query($sql_comment) == TRUE) {
+        echo "record inserted successfully";
+    } else {
+        echo "Error: " . $sql_comment . "<br>" . $conn->error;
+    }
+    
+}
+
+$conn->close();
+
+?>
+
 
 </body>
 </html>
