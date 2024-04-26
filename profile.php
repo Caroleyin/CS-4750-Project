@@ -42,7 +42,7 @@ else { // user is not logged in
     <p>Your Profile:</p>
     <ul>
         <li>Username: <?php echo $user["username"]; ?></li>
-        <li>Password: **********</li> <!-- For security reasons, don't display the password -->
+        <li>Password: **********</li> <!-- security: don't display the password -->
     </ul>
     
     <h3>Change Password</h3>

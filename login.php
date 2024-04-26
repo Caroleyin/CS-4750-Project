@@ -48,9 +48,59 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
 <!DOCTYPE html>
 <html>
 <head>
+    <meta charset='UTF-8'>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Page</title>
+    <style>
+        body {
+            font-family: Georgia, 'Times New Roman', Times, serif
+            background-color: bisque;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;jkhy 
+            margin: 0;
+            padding: 0;
+        }
+        .login-container {
+            background-color: brown;
+            border-radius: 8px;
+            box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            width: 320px;
+            text-align: center;
+        }
+        .login-container h2 {
+            margin-bottom: 20px;
+            color: darkgray;
+        }
+        .login-container button {
+            font-family: Georgia, 'Times New Roman', Times, serif
+            background-color: wheat;
+            color: black;
+            border: none;
+            border-radius: 4px;
+            padding: 12px 20px;
+            cursor: pointer;
+            width: 100%;
+            font-size: 16px;
+        }
+        .login-container button:hover {
+            background-color: #0056b3;
+        }
+        .login-container .register-link {
+            margin-top: 10px;
+            font-size: 14px;
+            color: #007bff;
+            text-decoration: none;
+        }
+        .login-container .register-link:hover {
+            text-decoration: underline;
+        }
+    </style>
 </head>
 <body>
+    <div class="login-container">
     <h2>Login</h2>
     <form method="post" action="login.php">
         <label for="username">Username:</label>
