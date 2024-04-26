@@ -39,7 +39,7 @@
             foreach ($result as $row) {
                 $recipe_ID = $row["recipe_ID"];
                 echo "<h2>". $row["recipe_name"]. "</h2>";
-                echo '<a href="recipe-info.php?val=' . $recipe_ID. '">go to recipe page!</a>';
+                echo '<a href="recipe-info.php?recipe_ID=' . $recipe_ID. '">go to recipe page!</a>';
                 // echo "<ul id=recipe-list class=recipe-list>";
                 // echo "<li>". $row["calories"]. "</li>";
                 // echo "<li>". $row["prep_time"]. "</li>";
