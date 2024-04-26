@@ -49,7 +49,21 @@
 
         if ($result2) {
             foreach ($result2 as $row) {
-                echo "<h1> Process </h1>";
+                echo "<h2> Process </h2>";
+                echo "<p>". 'Number of Steps: '. $row["number_Steps"]. "</p>";
+                echo "<p>". $row["instructions"]. "</p>";
+            }
+        } else {
+            echo '<p>Invalid recipe ID.</p>';
+        }
+
+        $stmt2 = $db->prepare("SELECT number_Steps, instructions FROM Recipe NATURAL JOIN Has_A NATURAL JOIN Process WHERE recipe_ID=$recipe_ID");
+        $stmt2->execute();
+        $result3 = $stmt1->fetchAll(PDO::FETCH_ASSOC);
+
+        if ($result2) {
+            foreach ($result2 as $row) {
+                echo "<h2> Process </h2>";
                 echo "<p>". 'Number of Steps: '. $row["number_Steps"]. "</p>";
                 echo "<p>". $row["instructions"]. "</p>";
             }
@@ -107,19 +121,16 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $comment_text = $_POST["comment_text"];
     $starNumber = $_POST["starNumber"];
     $username = $_SESSION["username"];
+}
+    $sql_comment= $db->prepare("INSERT INTO Review VALUES (15, '$username', $recipe_ID, '$comment_text', $starNumber)");
 
-    $sql_comment= $db->prepare("INSERT INTO Review (`review_ID`, `username`, `recipe_ID`, `comment`, `star_Number`) VALUES (?, ?, ?, ?, ?)");
-    $sql_comment->execute(15, $username, $recipe_ID, $comment_text, $starNumber);
-    //$sql_comment = "INSERT INTO Review ('review_ID', 'username', 'recipe_ID', 'comment', 'star_Number') VALUES (15, 'athy', $recipe_ID, $comment_text, $starNumber)";
-
-    echo "this one";
-    if ($conn->query($sql_comment) == TRUE) {
+    if ($sql_comment->execute())  {
         echo "record inserted successfully";
     } else {
         echo "Error: " . $sql_comment . "<br>" . $conn->error;
     }
     
-}
+
 
 $conn->close();
 
