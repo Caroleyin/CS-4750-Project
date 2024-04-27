@@ -163,7 +163,7 @@ $recipes = $stmt2->fetchAll(PDO::FETCH_ASSOC);
             <!-- Ingredients List Fields -->
             <label for="number_of_items">Number of Items:</label><br>
             <input type="number" id="number_of_items" name="number_of_items" onchange="addIngredientInputs()" required><br><br>
-
+            <span style="font-size: 0.8em; color: #666;">(Note: Entering the number of items will open input fields for the corresponding number of ingredients to enter)</span><br><br>
             <!-- Ingredients Fields -->
             <div id="ingredients"></div>
 
