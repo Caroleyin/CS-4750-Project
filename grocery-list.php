@@ -128,7 +128,7 @@ update the amounts of the groceries, and delete -->
                 <tbody>
                 <?php foreach ($grocery_list as $grocery_list_item): ?>
                     <tr>
-                        <td><?php echo $grocery_list_item['name']; ?></td>
+                        <td><?php echo $grocery_list_item['ingredient_Name']; ?></td>
                         <td><?php echo $grocery_list_item['amount']; ?></td>
                     </tr>
                 <?php endforeach; ?>  

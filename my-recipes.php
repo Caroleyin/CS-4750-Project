@@ -102,10 +102,78 @@ $recipes = $stmt2->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Recipes</title>
     <style>
-        .recipe-form {
-            display: none;
-        }
-    </style>
+         body {
+                font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+                margin: 0;
+                padding: 0;
+            }
+            .navbar {
+            background-color: cornflowerblue;
+            color: #ffffff;
+            padding: 10px 0;
+            text-align: center;
+            }
+
+            .navbar a {
+                color: #ffffff;
+                text-decoration: none;
+                margin: 0 10px;
+            }
+            .navbar a:hover {
+                max-width: 800px;
+                margin: 20px auto;
+                padding: 20px;
+                background-color: black;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            h1 {
+                margin-top: 20px;
+                text-align: center;
+            }
+            h3 {
+                margin-top: 20px;
+                text-align: center;
+            }
+            ul {
+                list-style-type: none;
+                padding: 0;
+                text-align: center;
+            }
+            li {
+                margin-bottom: 10px;
+            }
+            form {
+                margin-top: 20px;
+                text-align: center;
+            }
+            label {
+                display: block;
+                margin-bottom: 5px;
+            }
+            input[type="password"] {
+                padding: 8px;
+                width: 200px;
+                margin-bottom: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+            button {
+                padding 10px 20px;
+                background-color: cornflowerblue;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            button:hover {
+                background-color: darkblue;
+            }
+            /* Add this CSS to hide the form by default */
+            .recipe-form {
+                display: none;
+            }
+        </style>
     <script>
         function toggleForm() {
             var form = document.getElementById("recipeForm");
