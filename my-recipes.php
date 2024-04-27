@@ -12,7 +12,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $prep_time = $_POST['prep_time'];
     $type_of_meal = $_POST['type_of_meal'];
     $recipe_name = $_POST['recipe_name'];
-    $number_Steps = $_POST['number_steps'];
+    $number_steps = $_POST['number_steps'];
     $instructions = $_POST['instructions'];
     $ingredients = $_POST['ingredient_name']; // Array of ingredient names
     $amounts = $_POST['ingredient_amount']; // Array of ingredient amounts
@@ -32,34 +32,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $recipe_ID = $db->lastInsertId();
 
         // Insert into the "Process" table
-        $stmt_process = $db->prepare("INSERT INTO Process (number_Steps, instructions) VALUES (?, ?)");
+        $stmt_process = $db->prepare("INSERT INTO Process (number_steps, instructions) VALUES (?, ?)");
         $stmt_process->bindParam(1, $number_steps);
         $stmt_process->bindParam(2, $instructions);
         $stmt_process->execute();
-        $process_id = $db->lastInsertId();
+        $process_ID = $db->lastInsertId();
+
+        // Insert into the "Has_A" table
+        $stmt_has_a = $db->prepare("INSERT INTO Has_A (recipe_ID, process_ID) VALUES (?, ?)");
+        $stmt_has_a->bindParam(1, $recipe_ID);
+        $stmt_has_a->bindParam(2, $process_ID);
+        $stmt_has_a->execute();
 
         // Insert into the "Ingredients_List" table
-        $stmt_ingredients_list = $db->prepare("INSERT INTO Ingredients_List (number_Of_Items) VALUES (?)");
+        $stmt_ingredients_list = $db->prepare("INSERT INTO Ingredients_List (number_of_items) VALUES (?)");
         $stmt_ingredients_list->bindParam(1, $number_of_items);
         $stmt_ingredients_list->execute();
-        $ingredients_list_id = $db->lastInsertId();
+        $ingredient_list_id = $db->lastInsertId();
 
         // Insert ingredients into the "Ingredients" table and connect them to the "Lists" table
         for ($i = 0; $i < count($ingredients); $i++) {
             $ingredient_name = $ingredients[$i];
             $ingredient_amount = $amounts[$i];
 
-            $stmt_ingredients = $db->prepare("INSERT INTO Ingredients (name, amount) VALUES (?, ?)");
+            $stmt_ingredients = $db->prepare("INSERT INTO Ingredients (ingredient_Name, amount) VALUES (?, ?)");
             $stmt_ingredients->bindParam(1, $ingredient_name);
             $stmt_ingredients->bindParam(2, $ingredient_amount);
             $stmt_ingredients->execute();
             $ingredient_id = $db->lastInsertId();
 
             // Insert into the "Lists" table
-            $stmt_lists = $db->prepare("INSERT INTO Lists (ingredient_ID, ingredients_List_ID) VALUES (?, ?)");
+            $stmt_lists = $db->prepare("INSERT INTO Lists (ingredient_ID, ingredient_List_ID) VALUES (?, ?)");
             $stmt_lists->bindParam(1, $ingredient_id);
-            $stmt_lists->bindParam(2, $ingredients_list_id);
+            $stmt_lists->bindParam(2, $ingredient_list_id);
             $stmt_lists->execute();
+
+            // Insert into the "Has" table
+            $stmt_has = $db->prepare("INSERT INTO Has (recipe_ID, ingredient_List_ID) VALUES (?, ?)");
+            $stmt_has->bindParam(1, $recipe_ID);
+            $stmt_has->bindParam(2, $ingredient_list_id);
+            $stmt_has->execute();
         }
 
         // Insert into the "Creates" table
@@ -69,6 +81,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt_creates->execute();
 
         echo "<script>alert('Recipe published successfully!');</script>";
+        header("Location: my-recipes.php");
         exit();
     } else {
         echo "<script>alert('Error publishing recipe. Please try again.');</script>";
@@ -89,14 +102,99 @@ $recipes = $stmt2->fetchAll(PDO::FETCH_ASSOC);
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>My Recipes</title>
     <style>
-        .recipe-form {
-            display: none;
-        }
-    </style>
+         body {
+                font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
+                margin: 0;
+                padding: 0;
+            }
+            .navbar {
+            background-color: cornflowerblue;
+            color: #ffffff;
+            padding: 10px 0;
+            text-align: center;
+            }
+
+            .navbar a {
+                color: #ffffff;
+                text-decoration: none;
+                margin: 0 10px;
+            }
+            .navbar a:hover {
+                max-width: 800px;
+                margin: 20px auto;
+                padding: 20px;
+                background-color: black;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            h1 {
+                margin-top: 20px;
+                text-align: center;
+            }
+            h3 {
+                margin-top: 20px;
+                text-align: center;
+            }
+            ul {
+                list-style-type: none;
+                padding: 0;
+                text-align: center;
+            }
+            li {
+                margin-bottom: 10px;
+            }
+            form {
+                margin-top: 20px;
+                text-align: center;
+            }
+            label {
+                display: block;
+                margin-bottom: 5px;
+            }
+            input[type="password"] {
+                padding: 8px;
+                width: 200px;
+                margin-bottom: 10px;
+                border: 1px solid #ccc;
+                border-radius: 4px;
+            }
+            button {
+                padding 10px 20px;
+                background-color: cornflowerblue;
+                color: white;
+                border: none;
+                border-radius: 5px;
+                cursor: pointer;
+            }
+            button:hover {
+                background-color: darkblue;
+            }
+            /* Add this CSS to hide the form by default */
+            .recipe-form {
+                display: none;
+            }
+        </style>
     <script>
         function toggleForm() {
             var form = document.getElementById("recipeForm");
             form.style.display = (form.style.display === "none") ? "block" : "none";
+        }
+
+        function addIngredientInputs() {
+            var numberOfItems = document.getElementById("number_of_items").value;
+            var ingredientsDiv = document.getElementById("ingredients");
+            ingredientsDiv.innerHTML = ""; // Clear previous inputs
+
+            for (var i = 0; i < numberOfItems; i++) {
+                var ingredientInputs = document.createElement("div");
+                ingredientInputs.innerHTML = `
+                    <label>Ingredient ${i + 1}:</label><br>
+                    <input type="text" name="ingredient_name[]" placeholder="Ingredient Name" required>
+                    <input type="text" name="ingredient_amount[]" placeholder="Amount" required>
+                    <br><br>
+                `;
+                ingredientsDiv.appendChild(ingredientInputs);
+            }
         }
     </script>
 </head>
@@ -130,19 +228,12 @@ $recipes = $stmt2->fetchAll(PDO::FETCH_ASSOC);
             <label for="instructions">Instructions:</label><br>
             <textarea id="instructions" name="instructions" rows="4" cols="50" required></textarea><br><br>
 
-            <!-- Ingredients Fields -->
-            <label>Ingredients:</label><br>
-            <div id="ingredients">
-                <input type="text" name="ingredient_name[]" placeholder="Ingredient Name" required>
-                <input type="text" name="ingredient_amount[]" placeholder="Amount" required>
-                <br><br>
-            </div>
-            <button type="button" onclick="addIngredient()">Add Ingredient</button>
-            <br><br>
-
             <!-- Ingredients List Fields -->
             <label for="number_of_items">Number of Items:</label><br>
-            <input type="number" id="number_of_items" name="number_of_items" required><br><br>
+            <input type="number" id="number_of_items" name="number_of_items" onchange="addIngredientInputs()" required><br><br>
+            <span style="font-size: 0.8em; color: #666;">(Note: Entering the number of items will open input fields for the corresponding number of ingredients to enter)</span><br><br>
+            <!-- Ingredients Fields -->
+            <div id="ingredients"></div>
 
             <input type="submit" value="Publish your recipe">
         </form>

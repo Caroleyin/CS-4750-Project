@@ -68,34 +68,67 @@
         <a href="grocery-list.php">Grocery List</a>
         <a href="my-recipes.php">My Recipes</a>
         <a href="profile.php">Profile</a>
+    </div>
     <h1>My Homepage</h1>
+
+    <form method="post" action="homepage.php">
+        <label for="meal_type">Filter by Meal Type:</label>
+        <select name="meal_type" id="meal_type">
+            <option value="">All</option>
+            <option value="Breakfast">Breakfast</option>
+            <option value="Lunch">Lunch</option>
+            <option value="Dinner">Dinner</option>
+            <option value="Snack">Snack</option>
+         </select>
+        <button type="submit">Apply Filter</button>
+    </form>
 
     <ul>
         <?php
         require('connect-db.php');
         session_start();
 
-        //database connection parameters
         //check connection
         if ($db->connect_error) {
             die("Connection failed: ". $db->connect_error);
         }
+        
+        // initialize SQL query
+        $sql = "SELECT recipe_ID, recipe_name FROM Recipe";
 
-        // prepare SQL statement to fetch user based on username
-        $stmt = $db->prepare("SELECT recipe_ID, recipe_name FROM Recipe");
+        if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["meal_type"])) {
+            $meal_type = $_POST["meal_type"];
+            if (!empty($meal_type)) {
+                $sql .= " WHERE type_Of_Meal = ?";
+            }
+        }
+
+        $stmt = $db->prepare($sql);
+
+        if (!empty($meal_type)) {
+            $stmt->bindParam(1, $meal_type);
+        }
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+
+        //$stmt = $db->prepare("SELECT recipe_ID, recipe_name FROM Recipe");
+        //$stmt->execute();
+        //$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+
+        // prepare SQL statement to fetch user based on username
+       // $stmt = $db->prepare("SELECT recipe_ID, recipe_name FROM Recipe");
+       // $stmt->execute();
+       // $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
         if ($result) {
             foreach ($result as $row) {
                 $recipe_ID = $row["recipe_ID"];
+                echo "<li class='recipe-item'>";
                 echo "<h2>". $row["recipe_name"]. "</h2>";
-                echo '<a href="recipe-info.php?recipe_ID=' . $recipe_ID. '">go to recipe page!</a>';
-                // echo "<ul id=recipe-list class=recipe-list>";
-                // echo "<li>". $row["calories"]. "</li>";
-                // echo "<li>". $row["prep_time"]. "</li>";
-                // echo "<li>". $row["type_of_meal"]. "</li>";
-                // "</ul>";
+                echo "<a href='recipe-info.php?recipe_ID=$recipe_ID' class='recipe-link'>View Recipe</a>";
+                echo "</li>";
             }
         }
         else {
