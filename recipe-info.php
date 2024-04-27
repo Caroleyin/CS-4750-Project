@@ -137,26 +137,42 @@
             echo '<p>Invalid recipe ID.</p>';
         }
 
-        $stmt2 = $db->prepare("SELECT name, amount FROM Recipe NATURAL JOIN Has NATURAL JOIN Lists NATURAL JOIN Ingredients WHERE recipe_ID=$recipe_ID");
+        $stmt2 = $db->prepare("SELECT ingredient_ID, ingredient_Name, amount FROM Recipe NATURAL JOIN Has NATURAL JOIN Lists NATURAL JOIN Ingredients WHERE recipe_ID=$recipe_ID");
+
         $stmt2->execute();
+
         $result3 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
         echo "<h2> Ingredient List </h2>";
 
-
         if ($result3) {
             echo '<form method="post" action="' . htmlspecialchars($_SERVER['PHP_SELF'] . "?recipe_ID=" . $recipe_ID) .'">';
             foreach ($result3 as $row) {
-                echo '<input type="checkbox" name="' . $row["name"] . '" value="' . $row["name"] . '">';
-                echo '<label for="' . $row["name"] . '">' . $row["name"] . ' (' . (int)$row["amount"] . ')'. '</label>';
+                echo '<input type="checkbox" name="' . $row["ingredient_ID"] . '" value="' . $row["ingredient_Name"] . '">';
+                echo '<label for="' . $row["ingredient_ID"] . '">' . $row["ingredient_Name"] . ' (' . (int)$row["amount"] . ')'. '</label>';
                 echo '<br>';
              }
+            $user_id = $_SESSION["username"];
+
+            $stmt3 = $db->prepare("SELECT grocery_list_name, grocery_List_ID FROM Grocery_List NATURAL JOIN Create_New WHERE username='$user_id'");
+            $stmt3->execute();
+            $result4 = $stmt3->fetchAll(PDO::FETCH_ASSOC);
+
+            echo '<label for="grocery_list_select">Select Grocery List to add to</label>';
+            echo '<select name="grocery_list_select">';
+            foreach ($result4 as $row) {
+                $g_name = $row['grocery_list_name'];
+               // $id_grocery = $row["grocery_List_ID"];
+                echo '<option value=$grocery_List_ID> ' . $g_name. ' </option>';
+                $val += 1;
+            }
+             echo '</select>';
+
              echo '<br>';
-             echo '<button type="submit">Add to your Grocery List</button>';
+             echo '<button type="submit" name="submit_grocery_items">Add to your Grocery List</button>';
              echo '</form>';
-         } else {
-             echo '<p>Invalid recipe ID.</p>';
-     }
+          
+    }
 
 
 
@@ -208,21 +224,37 @@
     <?php
 
     if ($_SERVER["REQUEST_METHOD"] == "POST") {
-        echo "here67";
-        //if (isset($_POST['submit_comment'])) {
-            echo "her1e67";
+    if (isset($_POST['submit_comment'])) {
         $comment_text = $_POST["comment_text"];
         $starNumber = $_POST["starNumber"];
         $username = $_SESSION["username"];
 
-       // }
-        }
+        
+        
         $sql_comment= $db->prepare("INSERT INTO Review (username, recipe_ID, comment, star_Number) VALUES ('$username', $recipe_ID, '$comment_text', $starNumber)");
         if ($sql_comment->execute())  {
-            echo "record inserted successfully";
+            echo "comment inserted successfully";
         } else {
-            echo "Error: " . $sql_comment . "<br>" . $conn->error;
+            echo "insertion error";
         }
+    } elseif (isset($_POST['submit_grocery_items'])) {
+        echo "hrrrrr";
+        if ($result3) {
+            foreach ($result3 as $row) {
+                if ($_POST[$row["ingredient_ID"]]) {
+                    $ing_ID = $row["ingredient_ID"];
+                    $id_grocery = $_POST['grocery_list_select'];
+                    $sql_comment1= $db->prepare("INSERT INTO Contains (grocery_List_ID, ingredient_ID) VALUES ($id_grocery, $ing_ID)");
+                    if ($sql_comment1->execute())  {
+                        echo "ingredient inserted successfully";
+                    } else {
+                        echo "Error inserting ingredient";
+                    }
+                }
+    }
+}
+}
+}
     
 $conn->close();
 
