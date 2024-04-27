@@ -48,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         $stmt_ingredients_list = $db->prepare("INSERT INTO Ingredients_List (number_of_items) VALUES (?)");
         $stmt_ingredients_list->bindParam(1, $number_of_items);
         $stmt_ingredients_list->execute();
-        $ingredients_list_id = $db->lastInsertId();
+        $ingredient_list_id = $db->lastInsertId();
 
         // Insert ingredients into the "Ingredients" table and connect them to the "Lists" table
         for ($i = 0; $i < count($ingredients); $i++) {
@@ -62,15 +62,15 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             $ingredient_id = $db->lastInsertId();
 
             // Insert into the "Lists" table
-            $stmt_lists = $db->prepare("INSERT INTO Lists (ingredient_ID, ingredients_List_ID) VALUES (?, ?)");
+            $stmt_lists = $db->prepare("INSERT INTO Lists (ingredient_ID, ingredient_List_ID) VALUES (?, ?)");
             $stmt_lists->bindParam(1, $ingredient_id);
-            $stmt_lists->bindParam(2, $ingredients_list_id);
+            $stmt_lists->bindParam(2, $ingredient_list_id);
             $stmt_lists->execute();
 
             // Insert into the "Has" table
             $stmt_has = $db->prepare("INSERT INTO Has (recipe_ID, ingredient_List_ID) VALUES (?, ?)");
             $stmt_has->bindParam(1, $recipe_ID);
-            $stmt_has->bindParam(2, $ingredients_list_id);
+            $stmt_has->bindParam(2, $ingredient_list_id);
             $stmt_has->execute();
         }
 
