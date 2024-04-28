@@ -160,13 +160,14 @@
 
             echo '<label for="grocery_list_select">Select Grocery List to add to</label>';
             echo '<select name="grocery_list_select">';
+            echo '<option value="">--Please choose a grocery list--</option>';
             foreach ($result4 as $row) {
                 $g_name = $row['grocery_list_name'];
-               // $id_grocery = $row["grocery_List_ID"];
-                echo '<option value=$grocery_List_ID> ' . $g_name. ' </option>';
+                $grocery_List_ID = $row["grocery_List_ID"];
+                echo '<option value="' .$grocery_List_ID. '"> ' . $g_name. ' </option>';
                 $val += 1;
             }
-             echo '</select>';
+            echo '</select>';
 
              echo '<br>';
              echo '<button type="submit" name="submit_grocery_items">Add to your Grocery List</button>';
