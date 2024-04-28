@@ -47,7 +47,7 @@
                 margin-bottom: 5px;
             }
             textarea {
-                width: 100%;
+                width: 40%;
                 padding: 10px;
                 border: 1px solic #ccc;
                 border-radius: 5px;
@@ -60,6 +60,7 @@
                 border: none;
                 border-radius: 5px;
                 cursor: pointer;
+                text-align: center;
             }
             button: hover {
                 background-color: darkblue;
@@ -69,6 +70,14 @@
                 max-width: 600px;
                 padding: 20px;
                 background-color: #f9f9f9;
+                border-radius: 8px;
+                box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+            }
+            .comment {
+                margin: 20px auto;
+                max-width: 600px;
+                padding: 20px;
+                background-color: #cce6ff;
                 border-radius: 8px;
                 box-shadow: 0 4px 8px rgba(0,0,0,0.1);
             }
@@ -83,6 +92,9 @@
                 margin-top: 40px;
                 text-align: center;
             }
+            .grocery-form {
+                display: none;
+            }
         </style>
 </head>
 <body>
@@ -92,7 +104,7 @@
         <a href="my-recipes.php">My Recipes</a>
         <a href="profile.php">Profile</a>
         </div>
-    <h1>Recipe Page</h1>
+    <!-- <h1>Recipe Page</h1> -->
 
     <ul>
         <div class="recipe-details">
@@ -157,15 +169,41 @@
             $stmt3 = $db->prepare("SELECT grocery_list_name, grocery_List_ID FROM Grocery_List NATURAL JOIN Create_New WHERE username='$user_id'");
             $stmt3->execute();
             $result4 = $stmt3->fetchAll(PDO::FETCH_ASSOC);
+            }
 
-            echo '<label for="grocery_list_select">Select Grocery List to add to</label>';
+            ?>
+
+        <script>
+        function toggleForm() {
+            var form = document.getElementById("groceryForm");
+            form.style.display = (form.style.display === "none") ? "block" : "none";
+        }
+
+        </script>
+
+            <button onclick="toggleForm()">Create New Grocery List</button>
+            <div id="groceryForm" class="grocery-form">
+                <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+                    <br>
+                    <label for="g_list_name">Name:</label>
+                    <input type="text" id="g_list_name" name="g_list_name" required><br><br>
+
+                    <button type="submit" name="add_grocery_list">Create new grocery list</button>
+                    <!-- <input type="submit" name="add_grocery_list" value="Create new grocery list"> -->
+                </form>
+                <br><br>
+            </div>
+
+            <?php
+            if ($result3) {
+            //echo '<label for="grocery_list_select">Select Grocery List to add to</label>';
             echo '<select name="grocery_list_select">';
             echo '<option value="">--Please choose a grocery list--</option>';
             foreach ($result4 as $row) {
                 $g_name = $row['grocery_list_name'];
                 $grocery_List_ID = $row["grocery_List_ID"];
                 echo '<option value="' .$grocery_List_ID. '"> ' . $g_name. ' </option>';
-                $val += 1;
+               // $val += 1;
             }
             echo '</select>';
 
@@ -173,11 +211,10 @@
              echo '<button type="submit" name="submit_grocery_items">Add to your Grocery List</button>';
              echo '</form>';
           
-    }
+            }
 
 
-
-        ?>
+            ?>
         </div>
     </ul>
 
@@ -190,10 +227,14 @@
     $comments_stmt->execute();
     $comments_result = $comments_stmt->fetchAll(PDO::FETCH_ASSOC); // idk if fetch is right
 
+    //https://stackoverflow.com/questions/31202996/assigning-multiple-styles-on-an-html-element
     if ($comments_result) {
         foreach ($comments_result as $row) {
-            echo "<p>" . 'username: '. $row['username']. "</p>";
+            echo '<div class="comment">';
+            echo "<p style='font-family:verdana; color:#336699; font-size:20px'>" .  $row['username'] . "</p>";
+            echo "<p>" . 'rating: '. $row['star_Number']. "</p>";
             echo "<p>" . $row['comment']. "</p>";
+            echo '</div>';
         }
     }
     else {
@@ -216,7 +257,7 @@
             <option value="5">5</option>
         </select> <br><br>
         <label for="comment_text">Your comment:</label><br>
-        <textarea id="comment_text" name="comment_text" rows="4" cols="50" required></textarea><br><br>
+        <textarea id="comment_text" name="comment_text" rows="4" cols="30" required></textarea><br><br>
         <button type="submit" name="submit_comment">Submit Comment</button>
     </form>
     </div>
@@ -239,7 +280,6 @@
             echo "insertion error";
         }
     } elseif (isset($_POST['submit_grocery_items'])) {
-        echo "hrrrrr";
         if ($result3) {
             foreach ($result3 as $row) {
                 if ($_POST[$row["ingredient_ID"]]) {
@@ -247,15 +287,34 @@
                     $id_grocery = $_POST['grocery_list_select'];
                     $sql_comment1= $db->prepare("INSERT INTO Contains (grocery_List_ID, ingredient_ID) VALUES ($id_grocery, $ing_ID)");
                     if ($sql_comment1->execute())  {
-                        echo "ingredient inserted successfully";
+                        echo "ingredient inserted successfully ";
                     } else {
                         echo "Error inserting ingredient";
                     }
                 }
     }
 }
+    } elseif (isset($_POST['add_grocery_list'])) {
+        $grocery_list_name = $_POST["g_list_name"];
+       // echo $grocery_list_name;
+        $sql_g_list_name= $db->prepare("INSERT INTO Grocery_List (number_Of_Items, grocery_list_name) VALUES (?, ?)");
+        //echo "he12";
+        $stmt_ingredients->bindParam(1, 0);
+        $stmt_ingredients->bindParam(2, $grocery_list_name);
+        $sql_g_list_name->execute();
+        //echo "heep";
+        $grocery_list_ID = $db->lastInsertId();
+        $username = $_SESSION["username"];
+        $sql_g_list_create_new= $db->prepare("INSERT INTO Create_New (grocery_List_ID, username) VALUES ($grocery_list_ID,'$username')");
+        if ($sql_g_list_create_new->execute())  {
+            echo "grocery list creation successful";
+        } else {
+            echo "grocery list creation error";
+        }
+
+
 }
-}
+    }
     
 $conn->close();
 
