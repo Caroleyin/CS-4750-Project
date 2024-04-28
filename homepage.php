@@ -12,7 +12,7 @@
     <style>
         body {
             font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-            background-color: bisque;
+            background-color: white;
             margin: 0;
             padding: 0;
         }
@@ -35,12 +35,47 @@
             border-radius: 8px;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
+        h1 {
+            text-align: center;
+            margin-top: 30px;
+        }
+        form {
+            text-align: center;
+            margin-top: 20px;
+        }
+        label {
+            font-weight: bold;
+        }
+        select, button {
+            padding: 8px 12px;
+            border: none;
+            border-radius: 5px;
+            margin-left: 10px;
+            background-color: #007bff;
+            color: #ffffff;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        select: hover,button:hover {
+            background-color: #0056b3;
+        }
+        ul {
+            list-style: none;
+            padding: 0;
+            margin: 20px auto;
+            max-width: 800px;
+        }
+
         .recipe-item {
             margin-bottom: 20px;
-            padding: 10px;
+            padding: 15px;
             border: 1px solid #dee2e6;
             border-radius: 8px;
             background-color: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+        .recipe-item: hover {
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
         .recipe-item h2 {
             margin-top: 0;
@@ -55,9 +90,10 @@
             color: #ffffff;
             text-decoration: none;
             border-radius: 4px;
+            transition: all 0.3s ease;
         }
         .recipe-link:hover {
-            background-color: black;
+            background-color: #0056b3;
         }
         </style>
 </head>
@@ -111,17 +147,6 @@
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
-        //$stmt = $db->prepare("SELECT recipe_ID, recipe_name FROM Recipe");
-        //$stmt->execute();
-        //$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-
-        // prepare SQL statement to fetch user based on username
-       // $stmt = $db->prepare("SELECT recipe_ID, recipe_name FROM Recipe");
-       // $stmt->execute();
-       // $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
         if ($result) {
             foreach ($result as $row) {
                 $recipe_ID = $row["recipe_ID"];
@@ -139,8 +164,6 @@
 
         ?>
     </ul>
-    <script>
-
 
 </body>
 </html>
