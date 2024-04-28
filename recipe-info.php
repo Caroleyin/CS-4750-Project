@@ -297,10 +297,9 @@
     } elseif (isset($_POST['add_grocery_list'])) {
         $grocery_list_name = $_POST["g_list_name"];
        // echo $grocery_list_name;
-        $sql_g_list_name= $db->prepare("INSERT INTO Grocery_List (number_Of_Items, grocery_list_name) VALUES (?, ?)");
+        $sql_g_list_name= $db->prepare("INSERT INTO Grocery_List (number_Of_Items, grocery_list_name) VALUES (0, '$grocery_list_name')");
+
         //echo "he12";
-        $stmt_ingredients->bindParam(1, 0);
-        $stmt_ingredients->bindParam(2, $grocery_list_name);
         $sql_g_list_name->execute();
         //echo "heep";
         $grocery_list_ID = $db->lastInsertId();
