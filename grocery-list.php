@@ -159,7 +159,7 @@ update the amounts of the groceries, and delete -->
                             <td><?php echo $grocery_list_item['amount']; ?></td>
                             <td><input type="checkbox" name="select"></td> 
                             <td>
-                                <form action="grocery-list.php" method="post">   <!-- get --> 
+                                <form action="grocery-list.php" method="post">
                                     <input type="submit" value="Delete" name="deleteBtn" 
                                             class="btn btn-danger" />
                                     <input type="hidden" name="groceryListID" 

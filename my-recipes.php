@@ -3,6 +3,8 @@
 <!-- included in navigation bar -->
 
 <?php
+// error_reporting(E_ALL);
+// ini_set('display_errors', 'On');
 require('connect-db.php');
 session_start();
 
@@ -21,12 +23,26 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $username = $_SESSION['username'];
 
     // insert new recipe into the database
-    $stmt = $db->prepare("INSERT INTO Recipe (calories, prep_time, type_of_meal, recipe_name) VALUES (?, ?, ?, ?)");
+    // image processing
+    $filename = $_FILES["currFile"]["name"];
+    $tempname = $_FILES["currFile"]["tmp_name"];
+    $folder = "./recipeImages/" . $filename;
+
+    $stmt = $db->prepare("INSERT INTO Recipe (calories, prep_Time, type_Of_Meal, recipe_name, file_name) VALUES (?, ?, ?, ?, ?)");
+    // $stmt = $db->prepare("INSERT INTO Recipe (calories, prep_time, type_Of_Meal, recipe_name, file_name) VALUES (?, ?, ?, ?, ?)");
     $stmt->bindParam(1, $calories);
     $stmt->bindParam(2, $prep_time);
     $stmt->bindParam(3, $type_of_meal);
     $stmt->bindParam(4, $recipe_name);
+    $stmt->bindParam(5, $filename);
     $result = $stmt->execute();
+
+    if (move_uploaded_file($tempname, $folder)) {
+        echo "<h3>  Image uploaded successfully!</h3>";
+    }
+    else {
+        echo "<h3>  Image not uploaded successfully</h3>";
+    }
 
     if ($result) {
         $recipe_ID = $db->lastInsertId();
@@ -89,7 +105,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 }
 
 $username = $_SESSION['username'];
-$stmt2 = $db->prepare("SELECT R.recipe_ID, R.calories, R.prep_time, R.type_of_meal, R.recipe_name FROM Recipe R JOIN Creates C ON R.recipe_ID = C.recipe_ID WHERE C.username = ?");
+$stmt2 = $db->prepare("SELECT R.recipe_ID, R.calories, R.prep_time, R.type_of_meal, R.recipe_name, R.file_name FROM Recipe R JOIN Creates C ON R.recipe_ID = C.recipe_ID WHERE C.username = ?");
 $stmt2->bindParam(1, $username);
 $stmt2->execute();
 $recipes = $stmt2->fetchAll(PDO::FETCH_ASSOC);
@@ -208,7 +224,7 @@ $recipes = $stmt2->fetchAll(PDO::FETCH_ASSOC);
     <h1>My Recipes</h1>
     <button onclick="toggleForm()">Add Recipe</button>
     <div id="recipeForm" class="recipe-form">
-        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
+        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
             <label for="calories">Calories:</label><br>
             <input type="text" id="calories" name="calories" required><br><br>
 
@@ -235,7 +251,10 @@ $recipes = $stmt2->fetchAll(PDO::FETCH_ASSOC);
             <!-- Ingredients Fields -->
             <div id="ingredients"></div>
 
-            <input type="submit" value="Publish your recipe">
+            <!-- Image -->
+            <input type="file" class="form-control" value="Upload picture" name="currFile"/>
+
+            <input type="submit" name="submit" value="Publish your recipe">
         </form>
     </div>
     <h2>Published Recipes:</h2>
@@ -244,6 +263,8 @@ $recipes = $stmt2->fetchAll(PDO::FETCH_ASSOC);
         echo "<ul>";
         foreach ($recipes as $recipe) {
             echo "<li>{$recipe['recipe_name']} - Calories: {$recipe['calories']}, Prep Time: {$recipe['prep_time']} minutes, Type of Meal: {$recipe['type_of_meal']}</li>";
+            if ($recipe['file_name'])
+                echo "<li><img src='./recipeImages/". $recipe['file_name'] . "' style='width:20%; height:auto;'></li>";
         }
         echo "</ul>";
     } else {

@@ -91,6 +91,7 @@
             text-decoration: none;
             border-radius: 4px;
             transition: all 0.3s ease;
+            margin-left: 20px;
         }
         .recipe-link:hover {
             background-color: #0056b3;
@@ -130,7 +131,7 @@
         }
         
         // initialize SQL query
-        $sql = "SELECT recipe_ID, recipe_name FROM Recipe";
+        $sql = "SELECT recipe_ID, recipe_name, file_name FROM Recipe";
 
         if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["meal_type"])) {
             $meal_type = $_POST["meal_type"];
@@ -152,7 +153,11 @@
                 $recipe_ID = $row["recipe_ID"];
                 echo "<li class='recipe-item'>";
                 echo "<h2>". $row["recipe_name"]. "</h2>";
+                echo "<a>";
+                if ($row['file_name'])
+                    echo "<img src='./recipeImages/". $row['file_name'] . "' style='width:30%; height:auto;'>";
                 echo "<a href='recipe-info.php?recipe_ID=$recipe_ID' class='recipe-link'>View Recipe</a>";
+                echo "</a>";
                 echo "</li>";
             }
         }
