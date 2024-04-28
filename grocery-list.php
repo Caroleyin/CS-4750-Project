@@ -76,6 +76,7 @@ update the amounts of the groceries, and delete -->
                 font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
                 margin: 0;
                 padding: 0;
+                background-color: #e6e6ff;
             }
             .navbar {
             background-color: cornflowerblue;
@@ -159,7 +160,7 @@ update the amounts of the groceries, and delete -->
                             <td><?php echo $grocery_list_item['amount']; ?></td>
                             <td><input type="checkbox" name="select"></td> 
                             <td>
-                                <form action="grocery-list.php" method="post">
+                                <form action="grocery-list.php" method="post">   <!-- get --> 
                                     <input type="submit" value="Delete" name="deleteBtn" 
                                             class="btn btn-danger" />
                                     <input type="hidden" name="groceryListID" 

@@ -13,6 +13,7 @@
                 font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
                 margin: 0;
                 padding: 0;
+                background-color: #e6e6ff;
             }
             .navbar {
             background-color: cornflowerblue;
@@ -95,6 +96,7 @@
             .grocery-form {
                 display: none;
             }
+            
         </style>
 </head>
 <body>
@@ -127,6 +129,11 @@
                 $time = explode(':', $row["prep_Time"]);
                 $time_h_m = (int)$time[0] . ' hour(s) ' . (int)$time[1] . ' min(s)';
                 echo "<h1>". htmlspecialchars($row["recipe_name"]). "</h1>";
+                echo '<form method="post" action="' . htmlspecialchars($_SERVER['PHP_SELF'] . "?recipe_ID=" . $recipe_ID) .'">';
+                //echo '<input type="checkbox" name="save-recipe-check" id="save-recipe-check">';
+                echo '<label for="save-recipe-check">Save Recipe?</label>';
+                echo '<button type="submit" name="update-saved">save</button>';
+                echo '</form>';
                 echo "<p>". 'Calories: '. $row["calories"]. "</p>";
                 echo "<p>". 'Prep Time: '. $time_h_m . "</p>";
                 echo "<p>". 'Meal Type: '. $row["type_Of_Meal"]. "</p>";
@@ -297,7 +304,7 @@
     } elseif (isset($_POST['add_grocery_list'])) {
         $grocery_list_name = $_POST["g_list_name"];
        // echo $grocery_list_name;
-        $sql_g_list_name= $db->prepare("INSERT INTO Grocery_List (number_Of_Items, grocery_list_name) VALUES (0, '$grocery_list_name')");
+         $sql_g_list_name= $db->prepare("INSERT INTO Grocery_List (number_Of_Items, grocery_list_name) VALUES (0, '$grocery_list_name')");
 
         //echo "he12";
         $sql_g_list_name->execute();
@@ -312,6 +319,32 @@
         }
 
 
+} elseif(isset($_POST['update-saved'])) {
+   // echo "update saved";
+    $user_id = $_SESSION["username"];
+    $var = $_POST['save-recipe-check'];
+    $recipe_ID = $_GET['recipe_ID'];
+    //if (isset($var)) {
+     //   echo "he12";
+    //    echo $recipe_ID;
+       // $user_id = $_SESSION["username"];
+      //  echo $user_id;
+        $sql_save_update= $db->prepare("INSERT INTO Saves (username, recipe_ID) VALUES ('$user_id', $recipe_ID)");
+      //  echo "he13";
+        $sql_save_update->execute();
+     //   echo "yes";
+   // }
+    // } else {
+    //     echo "keep";
+    //     $recipe_ID = $_GET['recipe_ID'];
+    //     //$username = $_SESSION["username"];
+    //     echo $user_id;
+    //     echo $recipe_ID;
+
+    //     $sql_save_update1= $db->prepare("DELETE FROM Saves WHERE username=$user_id AND recipe_ID=$recipe_ID)");  
+    //     $sql_save_update1->execute();     
+    //     echo "yup";    
+    // }
 }
     }
     

@@ -12,7 +12,7 @@
     <style>
         body {
             font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
-            background-color: white;
+            background-color: #e6e6ff;
             margin: 0;
             padding: 0;
         }
@@ -65,18 +65,20 @@
             margin: 20px auto;
             max-width: 800px;
         }
-
         .recipe-item {
             margin-bottom: 20px;
-            padding: 15px;
+            padding: 10px;
             border: 1px solid #dee2e6;
             border-radius: 8px;
             background-color: #f8f9fa;
             transition: all 0.3s ease;
         }
+
         .recipe-item: hover {
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
+
+
         .recipe-item h2 {
             margin-top: 0;
             margin-bottom: 10px;
@@ -148,27 +150,40 @@
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-        if ($result) {
-            foreach ($result as $row) {
-                $recipe_ID = $row["recipe_ID"];
-                echo "<li class='recipe-item'>";
-                echo "<h2>". $row["recipe_name"]. "</h2>";
-                echo "<a>";
-                if ($row['file_name'])
-                    echo "<img src='./recipeImages/". $row['file_name'] . "' style='width:30%; height:auto;'>";
-                echo "<a href='recipe-info.php?recipe_ID=$recipe_ID' class='recipe-link'>View Recipe</a>";
-                echo "</a>";
-                echo "</li>";
-            }
-        }
-        else {
-            echo "No items found in the recipe list";
-        }
 
-        $conn->close();
+        //$stmt = $db->prepare("SELECT recipe_ID, recipe_name FROM Recipe");
+        //$stmt->execute();
+        //$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+        
+
+        // prepare SQL statement to fetch user based on username
+       // $stmt = $db->prepare("SELECT recipe_ID, recipe_name FROM Recipe");
+       // $stmt->execute();
+       // $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
+
+       if ($result) {
+        foreach ($result as $row) {
+            $recipe_ID = $row["recipe_ID"];
+            echo "<li class='recipe-item'>";
+            echo "<h2>". $row["recipe_name"]. "</h2>";
+            echo "<a>";
+            if ($row['file_name'])
+                echo "<img src='./recipeImages/". $row['file_name'] . "' style='width:30%; height:auto;'>";
+            echo "<a href='recipe-info.php?recipe_ID=$recipe_ID' class='recipe-link'>View Recipe</a>";
+            echo "</a>";
+            echo "</li>";
+        }
+    }
+    else {
+        echo "No items found in the recipe list";
+    }
+
+    $conn->close();
 
         ?>
     </ul>
+    <script>
+
 
 </body>
 </html>

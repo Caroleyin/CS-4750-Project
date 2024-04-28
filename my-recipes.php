@@ -3,8 +3,6 @@
 <!-- included in navigation bar -->
 
 <?php
-// error_reporting(E_ALL);
-// ini_set('display_errors', 'On');
 require('connect-db.php');
 session_start();
 
@@ -27,9 +25,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $filename = $_FILES["currFile"]["name"];
     $tempname = $_FILES["currFile"]["tmp_name"];
     $folder = "./recipeImages/" . $filename;
-
+  
     $stmt = $db->prepare("INSERT INTO Recipe (calories, prep_Time, type_Of_Meal, recipe_name, file_name) VALUES (?, ?, ?, ?, ?)");
-    // $stmt = $db->prepare("INSERT INTO Recipe (calories, prep_time, type_Of_Meal, recipe_name, file_name) VALUES (?, ?, ?, ?, ?)");
     $stmt->bindParam(1, $calories);
     $stmt->bindParam(2, $prep_time);
     $stmt->bindParam(3, $type_of_meal);
@@ -43,6 +40,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     else {
         echo "<h3>  Image not uploaded successfully</h3>";
     }
+
 
     if ($result) {
         $recipe_ID = $db->lastInsertId();
@@ -122,6 +120,7 @@ $recipes = $stmt2->fetchAll(PDO::FETCH_ASSOC);
                 font-family: 'Lucida Sans', 'Lucida Sans Regular', 'Lucida Grande', 'Lucida Sans Unicode', Geneva, Verdana, sans-serif;
                 margin: 0;
                 padding: 0;
+                background-color: #e6e6ff;
             }
             .navbar {
             background-color: cornflowerblue;
@@ -189,6 +188,30 @@ $recipes = $stmt2->fetchAll(PDO::FETCH_ASSOC);
             .recipe-form {
                 display: none;
             }
+            .recipe-item {
+            margin-bottom: 20px;
+            padding: 10px;
+            border: 1px solid #dee2e6;
+            border-radius: 8px;
+            background-color: #f8f9fa;
+            }
+            .recipe-item h2 {
+                margin-top: 0;
+                margin-bottom: 10px;
+                font-size: 24px;
+                color: #343a40;
+            }
+            .recipe-link {
+                display: inline-block;
+                padding: 8px 16px;
+                background-color: #007bff;
+                color: #ffffff;
+                text-decoration: none;
+                border-radius: 4px;
+            }
+            .recipe-link:hover {
+                background-color: black;
+            }
         </style>
     <script>
         function toggleForm() {
@@ -224,7 +247,7 @@ $recipes = $stmt2->fetchAll(PDO::FETCH_ASSOC);
     <h1>My Recipes</h1>
     <button onclick="toggleForm()">Add Recipe</button>
     <div id="recipeForm" class="recipe-form">
-        <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
+    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
             <label for="calories">Calories:</label><br>
             <input type="text" id="calories" name="calories" required><br><br>
 
@@ -265,11 +288,34 @@ $recipes = $stmt2->fetchAll(PDO::FETCH_ASSOC);
             echo "<li>{$recipe['recipe_name']} - Calories: {$recipe['calories']}, Prep Time: {$recipe['prep_time']} minutes, Type of Meal: {$recipe['type_of_meal']}</li>";
             if ($recipe['file_name'])
                 echo "<li><img src='./recipeImages/". $recipe['file_name'] . "' style='width:20%; height:auto;'></li>";
-        }
+            }
         echo "</ul>";
     } else {
         echo "You haven't published any recipes yet.";
     }
+    ?>
+    <h2>Saved Recipes:</h2>
+    <?php
+    $username = $_SESSION["username"];
+    
+
+    $sql_saved_recipes = $db->prepare("SELECT recipe_ID, recipe_name FROM Recipe NATURAL JOIN Saves WHERE username='$username'");
+    $sql_saved_recipes->execute();
+    $result_saved = $sql_saved_recipes->fetchAll(PDO::FETCH_ASSOC);
+
+    if ($result_saved) {
+        foreach ($result_saved as $row) {
+            $recipe_ID = $row["recipe_ID"];
+            echo "<div class='recipe-item'>";
+            echo "<h2>". $row["recipe_name"]. "</h2>";
+            echo "<a href='recipe-info.php?recipe_ID=$recipe_ID' class='recipe-link'>View Recipe</a>";
+            echo "</div>";
+        }
+    }
+    else {
+        echo "You have no recipes saved";
+    }
+    
     ?>
 </body>
 </html>
