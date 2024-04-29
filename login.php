@@ -11,9 +11,6 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
         $username = $_POST["username"];
         $password = $_POST["password"];
 
-        // password hashing for database security
-        // $hashpassword = password_hash($password, PASSWORD_DEFAULT);
-
         // prepare SQL statement to fetch user based on username
         $stmt = $db->prepare("SELECT * FROM Users WHERE username=?");
         $stmt->bindParam(1, $username);
@@ -27,7 +24,13 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
             if (password_verify($password, $user["password"])) {
             // if ($password === $user["password"]) { // for non-hashed password
                 $_SESSION["username"] = $username;
-                header("Location: homepage.php"); // redirect to homepage
+
+                // check if user is admin - if it is then go to user management page (different privilege)
+                if ($username === "admin_user") {
+                    header("Location: usermanagement.php");
+                } else {
+                    header("Location: homepage.php"); // redirect to homepage
+                }
                 exit;
             } else {
                 echo "Password entered is invalid";
