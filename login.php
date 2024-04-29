@@ -26,7 +26,7 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
                 $_SESSION["username"] = $username;
 
                 // check if user is admin - if it is then go to user management page (different privilege)
-                if ($username === "admin") {
+                if ($username === "gmf5dzw") {
                     header("Location: user-management.php");
                 } else {
                     header("Location: homepage.php"); // redirect to homepage
