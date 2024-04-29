@@ -15,15 +15,11 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete_recipes"])) {
     foreach ($_POST['selected_users'] as $username) {
         $stmt = $db->prepare("DELETE FROM Recipe WHERE recipe_id IN ( SELECT recipe_id FROM Creates WHERE username = ?)");
         $stmt->bindParam(1, $username);
-        echo "1";
-        if ($stmt->execute()) {
-            echo "2";
-            echo "Recipes from user $username deleted successfully.<br>";
-            header("refresh:3;url=user-management.php");
-        }
-        else {
-            echo "Error deleting recipes from user $username:</br>";
-        }
+        $stmt->execute(); 
+        $stmt->closeCursor();
+        echo "2";
+        echo "Recipes from user $username deleted successfully.<br>";
+        header("refresh:3;url=user-management.php");
     }
 }
 
