@@ -1,6 +1,6 @@
 <?php
 
-global $stmt;
+// global $stmt;
 
 require("connect-db.php");
 session_start();
@@ -19,6 +19,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete_users"])) {
         $stmt->bindParam(1, $username);
         if ($stmt->execute()) {
             echo "User with ID $username deleted successfully.<br>";
+            header("refresh:3;url=user-management.php");
         }
         else {
             echo "Error deleting user with ID $username:</br>";
