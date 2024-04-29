@@ -3,6 +3,8 @@
 <!-- included in navigation bar -->
 
 <?php
+error_reporting(E_ALL);
+ini_set('display_errors', '1');
 require('connect-db.php');
 session_start();
 
@@ -22,9 +24,18 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     // insert new recipe into the database
     // image processing
-    $filename = $_FILES["currFile"]["name"];
-    $tempname = $_FILES["currFile"]["tmp_name"];
-    $folder = "./recipeImages/" . $filename;
+    if ($_FILES["currFile"]) {
+        $filename = $_FILES["currFile"]["name"];
+        $tempname = $_FILES["currFile"]["tmp_name"];
+        $folder = "./recipeImages/" . $filename;
+
+        if (move_uploaded_file($tempname, $folder)) {
+            echo "<h3>  Image uploaded successfully</h3>";
+        }
+        else {
+            echo "<h3>  Image not uploaded successfully</h3>";
+        }
+    }
   
     $stmt = $db->prepare("INSERT INTO Recipe (calories, prep_Time, type_Of_Meal, recipe_name, file_name) VALUES (?, ?, ?, ?, ?)");
     $stmt->bindParam(1, $calories);
@@ -33,13 +44,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $stmt->bindParam(4, $recipe_name);
     $stmt->bindParam(5, $filename);
     $result = $stmt->execute();
-
-    if (move_uploaded_file($tempname, $folder)) {
-        echo "<h3>  Image uploaded successfully!</h3>";
-    }
-    else {
-        echo "<h3>  Image not uploaded successfully</h3>";
-    }
 
 
     if ($result) {
@@ -251,27 +255,27 @@ $recipes = $stmt2->fetchAll(PDO::FETCH_ASSOC);
     <div id="recipeForm" class="recipe-form">
         <form style="background-color: lightgray; padding: 20px;" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
             <label for="calories">Calories:</label><br>
-            <input type="text" id="calories" name="calories" required><br><br>
+            <input type="text" id="calories" name="calories" required="required"><br><br>
 
             <label for="prep_time">Prep Time (minutes):</label><br>
-            <input type="number" id="prep_time" name="prep_time" required><br><br>
+            <input type="number" id="prep_time" name="prep_time" required="required"><br><br>
 
             <label for="type_of_meal">Type of Meal:</label><br>
-            <input type="text" id="type_of_meal" name="type_of_meal" required><br><br>
+            <input type="text" id="type_of_meal" name="type_of_meal" required="required"><br><br>
 
             <label for="recipe_name">Recipe Name:</label><br>
-            <input type="text" id="recipe_name" name="recipe_name" required><br><br>
+            <input type="text" id="recipe_name" name="recipe_name" required="required"><br><br>
 
             <!-- Process Fields -->
             <label for="number_steps">Number of Steps:</label><br>
-            <input type="number" id="number_steps" name="number_steps" required><br><br>
+            <input type="number" id="number_steps" name="number_steps" required="required"><br><br>
 
             <label for="instructions">Instructions:</label><br>
-            <textarea id="instructions" name="instructions" rows="4" cols="50" required></textarea><br><br>
+            <textarea id="instructions" name="instructions" rows="4" cols="50" required="required"></textarea><br><br>
 
             <!-- Ingredients List Fields -->
             <label for="number_of_items">Number of Items:</label><br>
-            <input type="number" id="number_of_items" name="number_of_items" onchange="addIngredientInputs()" required><br><br>
+            <input type="number" id="number_of_items" name="number_of_items" onchange="addIngredientInputs()" required="required"><br><br>
             <span style="font-size: 0.8em; color: #666;">(Note: Entering the number of items will open input fields for the corresponding number of ingredients to enter)</span><br><br>
             <!-- Ingredients Fields -->
             <div id="ingredients"></div>
