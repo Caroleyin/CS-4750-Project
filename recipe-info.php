@@ -172,7 +172,7 @@
                 echo '<br>';
              }
             $user_id = $_SESSION["username"];
-
+            echo '</form>';
             $stmt3 = $db->prepare("SELECT grocery_list_name, grocery_List_ID FROM Grocery_List NATURAL JOIN Create_New WHERE username='$user_id'");
             $stmt3->execute();
             $result4 = $stmt3->fetchAll(PDO::FETCH_ASSOC);
@@ -188,23 +188,12 @@
 
         </script>
 
-            <button onclick="toggleForm()">Create New Grocery List</button>
-            <div id="groceryForm" class="grocery-form">
-                <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
-                    <br>
-                    <label for="g_list_name">Name:</label>
-                    <input type="text" id="g_list_name" name="g_list_name" required><br><br>
-
-                    <button type="submit" name="add_grocery_list">Create new grocery list</button>
-                    <!-- <input type="submit" name="add_grocery_list" value="Create new grocery list"> -->
-                </form>
-                <br><br>
-            </div>
-
             <?php
+
             if ($result3) {
             //echo '<label for="grocery_list_select">Select Grocery List to add to</label>';
-            echo '<select name="grocery_list_select">';
+            echo '<form method="post" id=gform action="' . htmlspecialchars($_SERVER['PHP_SELF'] . "?recipe_ID=" . $recipe_ID) .'">';
+            echo '<select name="grocery_list_select" id="grocery_list_select">';
             echo '<option value="">--Please choose a grocery list--</option>';
             foreach ($result4 as $row) {
                 $g_name = $row['grocery_list_name'];
@@ -222,6 +211,22 @@
 
 
             ?>
+
+            <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"] . "?recipe_ID=" . $recipe_ID); ?>">
+            <p> ---- OR ---- </p>
+            <button onclick="toggleForm()">Create New Grocery List</button>
+            <div id="groceryForm" class="grocery-form">
+                    <br>
+                    <label for="g_list_name">Name:</label>
+                    <input type="text" id="g_list_name" name="g_list_name" required><br><br>
+
+                    <button type="submit" name="add_grocery_list">Create new grocery list</button>
+                    <!-- <input type="submit" name="add_grocery_list" value="Create new grocery list"> -->
+                <br><br>
+            </div>
+            </form>
+
+
         </div>
     </ul>
 
@@ -287,12 +292,19 @@
             echo "insertion error";
         }
     } elseif (isset($_POST['submit_grocery_items'])) {
+        echo "here";
         if ($result3) {
+            echo "line1";
             foreach ($result3 as $row) {
+                echo "line2";
                 if ($_POST[$row["ingredient_ID"]]) {
+                    echo "line3";
                     $ing_ID = $row["ingredient_ID"];
                     $id_grocery = $_POST['grocery_list_select'];
                     $sql_comment1= $db->prepare("INSERT INTO Contains (grocery_List_ID, ingredient_ID) VALUES ($id_grocery, $ing_ID)");
+                    echo "line4";
+                    echo $ing_ID;
+                    echo $id_grocery;
                     if ($sql_comment1->execute())  {
                         echo "ingredient inserted successfully ";
                     } else {
@@ -303,10 +315,10 @@
 }
     } elseif (isset($_POST['add_grocery_list'])) {
         $grocery_list_name = $_POST["g_list_name"];
-       // echo $grocery_list_name;
+        echo $grocery_list_name;
          $sql_g_list_name= $db->prepare("INSERT INTO Grocery_List (number_Of_Items, grocery_list_name) VALUES (0, '$grocery_list_name')");
 
-        //echo "he12";
+        echo "he12";
         $sql_g_list_name->execute();
         //echo "heep";
         $grocery_list_ID = $db->lastInsertId();
@@ -314,6 +326,14 @@
         $sql_g_list_create_new= $db->prepare("INSERT INTO Create_New (grocery_List_ID, username) VALUES ($grocery_list_ID,'$username')");
         if ($sql_g_list_create_new->execute())  {
             echo "grocery list creation successful";
+            ?>
+            <script>
+            //https://stackoverflow.com/questions/18179067/select-from-drop-down-menu-and-reload-page
+
+            document.getElementById("gform").submit();
+
+            </script>
+    <?php
         } else {
             echo "grocery list creation error";
         }
