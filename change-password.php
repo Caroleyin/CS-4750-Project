@@ -17,8 +17,11 @@ if ($newPassword != $confirmNewPassword) {
     exit;
 }
 
-$stmt = $db->prepare("UPDATE Users SET password = '$newPassword' WHERE username = ?");
-$stmt->bindParam(1, $_SESSION['username']);
+$hashedNewPassword = password_hash($newPassword, PASSWORD_DEFAULT);
+
+$stmt = $db->prepare("UPDATE Users SET password = ? WHERE username = ?");
+$stmt->bindParam(1, $hashedNewPassword);
+$stmt->bindParam(2, $_SESSION['username']);
 
 // execute the statement
 if ($stmt->execute()) {

@@ -24,8 +24,8 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
             $user = $result;
 
             // check if the password is correct
-            // if (password_verify($password, $user["password"])) {
-            if ($password === $user["password"]) { // for non-hashed password
+            if (password_verify($password, $user["password"])) {
+            // if ($password === $user["password"]) { // for non-hashed password
                 $_SESSION["username"] = $username;
                 header("Location: homepage.php"); // redirect to homepage
                 exit;
@@ -91,7 +91,7 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
         .login-container .register-link {
             margin-top: 10px;
             font-size: 14px;
-            color: #007bff;
+            color: black;
             text-decoration: none;
         }
         .login-container .register-link:hover {
@@ -109,5 +109,6 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
         <input type="password" id="password" name="password" required><br><br>
         <button type="submit" name="login">Login</button>
     </form>
+    <a href="register-user.php" class="register-link">New? Create an Account.</a>
 </body>
 </html>
