@@ -14,20 +14,19 @@ $result = $db->query("SELECT username FROM Users");
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete_users"])) {
     foreach ($_POST['selected_users'] as $username) {
-        $stmt = $db->prepare("DELETE FROM users WHERE username = ?");
+        $stmt = $db->prepare("DELETE FROM Users WHERE username = ?");
         $stmt->bindParam(1, $username);
 
         if ($stmt->execute()) {
             echo "User with ID $username deleted successfully.<br>";
         }
         else {
-            echo "Error deleting user with ID $username.</br>";
+            echo "Error deleting user with ID $username: ". $stmt->error . "</br>";
         }
-        // $stmt->close();
+        $stmt->close();
     }
-
 }
-// $db->close();
+
 ?>
 
 <!DOCTYPE html>
@@ -43,8 +42,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete_users"])) {
             <?php while ($row = $result->fetch()) { ?>
                 <li>
                     <label>
-                        <input type="checkbox" name="selected_users[]" value="<?php echo $row['username']; ?>">
-                        <?php echo $row['username']; ?>
+                        <input type="checkbox" name="selected_users[]" value="<?php echo htmlspecialchars($row['username']); ?>">
+                        <?php echo htmlspecialchars($row['username']); ?>
                      </label>
                 </li>
             <?php } ?>
