@@ -13,16 +13,18 @@ $result = $db->query("SELECT username FROM Users");
 var_dump($result);
 
 
-if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete_users"])) {
+if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete_recipes"])) {
     foreach ($_POST['selected_users'] as $username) {
-        $stmt = $db->prepare("DELETE FROM Users WHERE username = ?");
+        $stmt = $db->prepare("DELETE FROM DELETE FROM Recipe WHERE recipe_id IN ( SELECT recipe_id FROM Creates WHERE username = ?');");
         $stmt->bindParam(1, $username);
+        echo "1";
         if ($stmt->execute()) {
-            echo "User with ID $username deleted successfully.<br>";
+            echo "2";
+            echo "Recipes from user $username deleted successfully.<br>";
             header("refresh:3;url=user-management.php");
         }
         else {
-            echo "Error deleting user with ID $username:</br>";
+            echo "Error deleting recipes from user $username:</br>";
         }
         // $stmt->close();
     }
@@ -34,10 +36,10 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete_users"])) {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Delete Users</title>
+    <title>Delete Recipes</title>
 </head>
 <body>
-    <h2>Delete Users</h2>
+    <h2>Delete Recipes</h2>
     <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>">
         <ul>
             <?php while ($row = $result->fetch()) { ?>
