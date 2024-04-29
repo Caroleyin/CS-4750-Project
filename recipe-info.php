@@ -164,7 +164,7 @@
         $result3 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
         echo "<h2> Ingredient List </h2>";
-        echo '<form method="post" action="' . htmlspecialchars($_SERVER['PHP_SELF'] . "?recipe_ID=" . $recipe_ID) .'">';
+        echo '<form method="post" id=gform action="' . htmlspecialchars($_SERVER['PHP_SELF'] . "?recipe_ID=" . $recipe_ID) .'">';
 
         if ($result3) {
           //  echo '<form method="post" action="' . htmlspecialchars($_SERVER['PHP_SELF'] . "?recipe_ID=" . $recipe_ID) .'">';
@@ -366,7 +366,7 @@
 }
     }
     
-$conn->close();
+$db->close();
 
 ?>
 
