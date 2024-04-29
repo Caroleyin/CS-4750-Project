@@ -10,8 +10,6 @@ if ($db->connect_error) {
 }
 
 $result = $db->query("SELECT username FROM Users");
-var_dump($result);
-
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete_recipes"])) {
     foreach ($_POST['selected_users'] as $username) {
@@ -26,7 +24,6 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete_recipes"])) {
         else {
             echo "Error deleting recipes from user $username:</br>";
         }
-        // $stmt->close();
     }
 }
 
@@ -51,7 +48,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete_recipes"])) {
                 </li>
             <?php } ?>
         </ul>
-        <button type="submit" name="delete_users">Delete Selected Users</button>
+        <button type="submit" name="delete_recipes">Delete Selected Recipes</button>
     </form>
  </body>
  </html>
