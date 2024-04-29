@@ -15,7 +15,7 @@ var_dump($result);
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete_recipes"])) {
     foreach ($_POST['selected_users'] as $username) {
-        $stmt = $db->prepare("DELETE FROM DELETE FROM Recipe WHERE recipe_id IN ( SELECT recipe_id FROM Creates WHERE username = ?');");
+        $stmt = $db->prepare("DELETE FROM Recipe WHERE recipe_id IN ( SELECT recipe_id FROM Creates WHERE username = ?)");
         $stmt->bindParam(1, $username);
         echo "1";
         if ($stmt->execute()) {
