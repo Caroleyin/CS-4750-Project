@@ -66,6 +66,7 @@
             max-width: 800px;
         }
         .recipe-item {
+            text-align: center;
             margin-bottom: 20px;
             padding: 10px;
             border: 1px solid #dee2e6;
@@ -80,12 +81,14 @@
 
 
         .recipe-item h2 {
+            text-align: center;
             margin-top: 0;
             margin-bottom: 10px;
             font-size: 24px;
             color: #343a40;
         }
         .recipe-link {
+            text-align: center;
             display: inline-block;
             padding: 8px 16px;
             background-color: #007bff;
@@ -168,7 +171,8 @@
             echo "<h2>". $row["recipe_name"]. "</h2>";
             echo "<a>";
             if ($row['file_name'])
-                echo "<img src='./recipeImages/". $row['file_name'] . "' style='width:30%; height:auto;'>";
+                echo "<img src='./recipeImages/". $row['file_name'] . "' style='width:30%; height:auto; text-align: center;'>";
+            echo "<br>";
             echo "<a href='recipe-info.php?recipe_ID=$recipe_ID' class='recipe-link'>View Recipe</a>";
             echo "</a>";
             echo "</li>";
