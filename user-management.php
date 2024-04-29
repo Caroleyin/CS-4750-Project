@@ -10,20 +10,20 @@ if ($db->connect_error) {
 }
 
 $result = $db->query("SELECT username FROM Users");
+var_dump($result);
 
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete_users"])) {
     foreach ($_POST['selected_users'] as $username) {
         $stmt = $db->prepare("DELETE FROM Users WHERE username = ?");
         $stmt->bindParam(1, $username);
-
         if ($stmt->execute()) {
             echo "User with ID $username deleted successfully.<br>";
         }
         else {
-            echo "Error deleting user with ID $username: ". $stmt->error . "</br>";
+            echo "Error deleting user with ID $username:</br>";
         }
-        $stmt->close();
+        // $stmt->close();
     }
 }
 

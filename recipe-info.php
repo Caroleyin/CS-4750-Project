@@ -106,7 +106,6 @@
         <a href="my-recipes.php">My Recipes</a>
         <a href="profile.php">Profile</a>
         </div>
-    <!-- <h1>Recipe Page</h1> -->
 
     <ul>
         <div class="recipe-details">
@@ -120,10 +119,10 @@
         }
         $recipe_ID = $_GET['recipe_ID']; 
         $stmt = $db->prepare("SELECT recipe_ID, recipe_name, calories, prep_Time, recipe_name, type_Of_Meal FROM Recipe WHERE recipe_ID = $recipe_ID");
-        //$stmt->bind_param("i", $recipe_ID);
         $stmt->execute();
         $result1 = $stmt->fetchAll(PDO::FETCH_ASSOC);
-//https://stackoverflow.com/questions/50567276/how-to-convert-time-format-mysql-to-hours-minutes 
+
+        // https://stackoverflow.com/questions/50567276/how-to-convert-time-format-mysql-to-hours-minutes 
         if ($result1) {
             foreach ($result1 as $row) {
                 $time = explode(':', $row["prep_Time"]);
@@ -322,9 +321,7 @@
         echo $grocery_list_name;
          $sql_g_list_name= $db->prepare("INSERT INTO Grocery_List (number_Of_Items, grocery_list_name) VALUES (0, '$grocery_list_name')");
 
-        echo "he12";
         $sql_g_list_name->execute();
-        //echo "heep";
         $grocery_list_ID = $db->lastInsertId();
         $username = $_SESSION["username"];
         $sql_g_list_create_new= $db->prepare("INSERT INTO Create_New (grocery_List_ID, username) VALUES ($grocery_list_ID,'$username')");
@@ -339,40 +336,21 @@
             </script>
     <?php
         } else {
-            echo "grocery list creation error";
+            echo "Grocery list creation error";
         }
 
 
 } elseif(isset($_POST['update-saved'])) {
-   // echo "update saved";
     $user_id = $_SESSION["username"];
     $var = $_POST['save-recipe-check'];
     $recipe_ID = $_GET['recipe_ID'];
-    //if (isset($var)) {
-     //   echo "he12";
-    //    echo $recipe_ID;
-       // $user_id = $_SESSION["username"];
-      //  echo $user_id;
-        $sql_save_update= $db->prepare("INSERT INTO Saves (username, recipe_ID) VALUES ('$user_id', $recipe_ID)");
-      //  echo "he13";
-        $sql_save_update->execute();
-     //   echo "yes";
-   // }
-    // } else {
-    //     echo "keep";
-    //     $recipe_ID = $_GET['recipe_ID'];
-    //     //$username = $_SESSION["username"];
-    //     echo $user_id;
-    //     echo $recipe_ID;
 
-    //     $sql_save_update1= $db->prepare("DELETE FROM Saves WHERE username=$user_id AND recipe_ID=$recipe_ID)");  
-    //     $sql_save_update1->execute();     
-    //     echo "yup";    
-    // }
+    $sql_save_update= $db->prepare("INSERT INTO Saves (username, recipe_ID) VALUES ('$user_id', $recipe_ID)");
+    $sql_save_update->execute();
 }
     }
     
-$conn->close();
+$db->close();
 
 ?>
 

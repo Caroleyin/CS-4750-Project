@@ -153,17 +153,6 @@
         $stmt->execute();
         $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
 
-
-        //$stmt = $db->prepare("SELECT recipe_ID, recipe_name FROM Recipe");
-        //$stmt->execute();
-        //$result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-        
-
-        // prepare SQL statement to fetch user based on username
-       // $stmt = $db->prepare("SELECT recipe_ID, recipe_name FROM Recipe");
-       // $stmt->execute();
-       // $result = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
        if ($result) {
         foreach ($result as $row) {
             $recipe_ID = $row["recipe_ID"];
@@ -182,7 +171,7 @@
         echo "No items found in the recipe list";
     }
 
-    $conn->close();
+    $db->close();
 
         ?>
     </ul>
