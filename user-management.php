@@ -11,10 +11,6 @@ if ($db->connect_error) {
 
 $result = $db->query("SELECT username FROM Users");
 
-// if (!isset($_SESSION["username"]) || $_SESSION["username"] !== "admin") {
-//     header("Location: login.php");
-//     exit();
-// }
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["delete_users"])) {
     foreach ($_POST['selected_users'] as $username) {
