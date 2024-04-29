@@ -119,7 +119,7 @@
             die("Connection failed: ". $db->connect_error);
         }
         $recipe_ID = $_GET['recipe_ID']; 
-        $stmt = $db->prepare("SELECT recipe_ID, recipe_name, calories, prep_Time, recipe_name, type_Of_Meal FROM Recipe WHERE recipe_ID = $recipe_ID");
+        $stmt = $db->prepare("SELECT recipe_ID, recipe_name, calories, prep_Time, recipe_name, type_Of_Meal, file_name FROM Recipe WHERE recipe_ID = $recipe_ID");
         //$stmt->bind_param("i", $recipe_ID);
         $stmt->execute();
         $result1 = $stmt->fetchAll(PDO::FETCH_ASSOC);
@@ -129,6 +129,7 @@
                 $time = explode(':', $row["prep_Time"]);
                 $time_h_m = (int)$time[0] . ' hour(s) ' . (int)$time[1] . ' min(s)';
                 echo "<h1>". htmlspecialchars($row["recipe_name"]). "</h1>";
+                echo "<img src='./recipeImages/". $row['file_name'] . "' style='width:80%; height:auto; text-align: center; margin-left: auto; margin-right: auto; display: block;'>";
                 echo '<form method="post" action="' . htmlspecialchars($_SERVER['PHP_SELF'] . "?recipe_ID=" . $recipe_ID) .'">';
                 //echo '<input type="checkbox" name="save-recipe-check" id="save-recipe-check">';
                 echo '<label for="save-recipe-check">Save Recipe?</label>';
