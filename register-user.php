@@ -4,7 +4,6 @@ require("connect-db.php");
 session_start();
 
 if ($_SERVER["REQUEST_METHOD"] == "POST" && isset($_POST["register-user"])) {
-    echo ('in first if');
     // get username and password
     $username = $_POST["username"];
     $password = $_POST["password"];
