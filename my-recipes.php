@@ -228,7 +228,7 @@ $recipes = $stmt2->fetchAll(PDO::FETCH_ASSOC);
         function addIngredientInputs() {
             var numberOfItems = document.getElementById("number_of_items").value;
             var ingredientsDiv = document.getElementById("ingredients");
-            ingredientsDiv.innerHTML = ""; // Clear previous inputs
+            ingredientsDiv.innerHTML = ""; // clear previous inputs
 
             for (var i = 0; i < numberOfItems; i++) {
                 var ingredientInputs = document.createElement("div");
