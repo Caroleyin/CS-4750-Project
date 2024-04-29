@@ -132,7 +132,11 @@
                 echo '<form method="post" action="' . htmlspecialchars($_SERVER['PHP_SELF'] . "?recipe_ID=" . $recipe_ID) .'">';
                 //echo '<input type="checkbox" name="save-recipe-check" id="save-recipe-check">';
                 echo '<label for="save-recipe-check">Save Recipe?</label>';
-                echo '<button type="submit" name="update-saved">save</button>';
+                echo '<button type="submit" name="update-saved">Save</button>';
+                // Check if the form is submitted and display a success message
+                if (isset($_POST['update-saved'])) {
+                    echo '<p>Saved successfully!</p>';
+                }
                 echo '</form>';
                 echo "<p>". 'Calories: '. $row["calories"]. "</p>";
                 echo "<p>". 'Prep Time: '. $time_h_m . "</p>";

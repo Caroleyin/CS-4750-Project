@@ -11,9 +11,6 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
         $username = $_POST["username"];
         $password = $_POST["password"];
 
-        // password hashing for database security
-        // $hashpassword = password_hash($password, PASSWORD_DEFAULT);
-
         // prepare SQL statement to fetch user based on username
         $stmt = $db->prepare("SELECT * FROM Users WHERE username=?");
         $stmt->bindParam(1, $username);
@@ -24,10 +21,16 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
             $user = $result;
 
             // check if the password is correct
-            // if (password_verify($password, $user["password"])) {
-            if ($password === $user["password"]) { // for non-hashed password
+            if (password_verify($password, $user["password"])) {
+            // if ($password === $user["password"]) { // for non-hashed password
                 $_SESSION["username"] = $username;
-                header("Location: homepage.php"); // redirect to homepage
+
+                // check if user is admin - if it is then go to user management page (different privilege)
+                if ($username === "admin") {
+                    header("Location: usermanagement.php");
+                } else {
+                    header("Location: homepage.php"); // redirect to homepage
+                }
                 exit;
             } else {
                 echo "Password entered is invalid";
@@ -91,7 +94,7 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
         .login-container .register-link {
             margin-top: 10px;
             font-size: 14px;
-            color: #007bff;
+            color: black;
             text-decoration: none;
         }
         .login-container .register-link:hover {
@@ -109,5 +112,6 @@ if ($_SERVER["REQUEST_METHOD" ] == "POST" && isset($_POST["login"])) {
         <input type="password" id="password" name="password" required><br><br>
         <button type="submit" name="login">Login</button>
     </form>
+    <a href="register-user.php" class="register-link">New? Create an Account.</a>
 </body>
 </html>

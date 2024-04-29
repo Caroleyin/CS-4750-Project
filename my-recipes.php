@@ -187,6 +187,8 @@ $recipes = $stmt2->fetchAll(PDO::FETCH_ASSOC);
             /* Add this CSS to hide the form by default */
             .recipe-form {
                 display: none;
+                padding: 20px;
+                margin: 0 auto;
             }
             .recipe-item {
             margin-bottom: 20px;
@@ -247,7 +249,7 @@ $recipes = $stmt2->fetchAll(PDO::FETCH_ASSOC);
     <h1>My Recipes</h1>
     <button onclick="toggleForm()">Add Recipe</button>
     <div id="recipeForm" class="recipe-form">
-    <form method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
+        <form style="background-color: lightgray; padding: 20px;" method="post" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"]); ?>" enctype="multipart/form-data">
             <label for="calories">Calories:</label><br>
             <input type="text" id="calories" name="calories" required><br><br>
 
@@ -275,6 +277,7 @@ $recipes = $stmt2->fetchAll(PDO::FETCH_ASSOC);
             <div id="ingredients"></div>
 
             <!-- Image -->
+            <span style="font-size: 1.0em; color: #666;">Upload picture of your meal below</span><br><br>
             <input type="file" class="form-control" value="Upload picture" name="currFile"/>
 
             <input type="submit" name="submit" value="Publish your recipe">
