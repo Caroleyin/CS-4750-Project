@@ -1,3 +1,4 @@
+
 <!-- when user clicks on a recipe from the homepage or their own recipes, leads to here -->
 <!-- includes the process, ingredients list, posted reviews, and ability to write a review if not your own recipe -->
 <!-- included in navigation bar -->
@@ -106,6 +107,7 @@
         <a href="my-recipes.php">My Recipes</a>
         <a href="profile.php">Profile</a>
         </div>
+    <!-- <h1>Recipe Page</h1> -->
 
     <ul>
         <div class="recipe-details">
@@ -119,24 +121,19 @@
         }
         $recipe_ID = $_GET['recipe_ID']; 
         $stmt = $db->prepare("SELECT recipe_ID, recipe_name, calories, prep_Time, recipe_name, type_Of_Meal FROM Recipe WHERE recipe_ID = $recipe_ID");
+        //$stmt->bind_param("i", $recipe_ID);
         $stmt->execute();
         $result1 = $stmt->fetchAll(PDO::FETCH_ASSOC);
-
-        // https://stackoverflow.com/questions/50567276/how-to-convert-time-format-mysql-to-hours-minutes 
+//https://stackoverflow.com/questions/50567276/how-to-convert-time-format-mysql-to-hours-minutes 
         if ($result1) {
             foreach ($result1 as $row) {
                 $time = explode(':', $row["prep_Time"]);
                 $time_h_m = (int)$time[0] . ' hour(s) ' . (int)$time[1] . ' min(s)';
                 echo "<h1>". htmlspecialchars($row["recipe_name"]). "</h1>";
-                echo "<img src='./recipeImages/". $row['file_name'] . "' style='width:80%; height:auto; text-align: center; margin-left: auto; margin-right: auto; display: block;'>";
                 echo '<form method="post" action="' . htmlspecialchars($_SERVER['PHP_SELF'] . "?recipe_ID=" . $recipe_ID) .'">';
                 //echo '<input type="checkbox" name="save-recipe-check" id="save-recipe-check">';
                 echo '<label for="save-recipe-check">Save Recipe?</label>';
-                echo '<button type="submit" name="update-saved">Save</button>';
-                // Check if the form is submitted and display a success message
-                if (isset($_POST['update-saved'])) {
-                    echo '<p>Saved successfully!</p>';
-                }
+                echo '<button type="submit" name="update-saved">save</button>';
                 echo '</form>';
                 echo "<p>". 'Calories: '. $row["calories"]. "</p>";
                 echo "<p>". 'Prep Time: '. $time_h_m . "</p>";
@@ -167,16 +164,16 @@
         $result3 = $stmt2->fetchAll(PDO::FETCH_ASSOC);
 
         echo "<h2> Ingredient List </h2>";
+        echo '<form method="post" action="' . htmlspecialchars($_SERVER['PHP_SELF'] . "?recipe_ID=" . $recipe_ID) .'">';
 
         if ($result3) {
-            echo '<form method="post" action="' . htmlspecialchars($_SERVER['PHP_SELF'] . "?recipe_ID=" . $recipe_ID) .'">';
+          //  echo '<form method="post" action="' . htmlspecialchars($_SERVER['PHP_SELF'] . "?recipe_ID=" . $recipe_ID) .'">';
             foreach ($result3 as $row) {
                 echo '<input type="checkbox" name="' . $row["ingredient_ID"] . '" value="' . $row["ingredient_Name"] . '">';
                 echo '<label for="' . $row["ingredient_ID"] . '">' . $row["ingredient_Name"] . ' (' . (int)$row["amount"] . ')'. '</label>';
-                echo '<br>';
              }
+           //  echo '</form>';
             $user_id = $_SESSION["username"];
-            echo '</form>';
             $stmt3 = $db->prepare("SELECT grocery_list_name, grocery_List_ID FROM Grocery_List NATURAL JOIN Create_New WHERE username='$user_id'");
             $stmt3->execute();
             $result4 = $stmt3->fetchAll(PDO::FETCH_ASSOC);
@@ -196,8 +193,7 @@
 
             if ($result3) {
             //echo '<label for="grocery_list_select">Select Grocery List to add to</label>';
-            echo '<form method="post" id=gform action="' . htmlspecialchars($_SERVER['PHP_SELF'] . "?recipe_ID=" . $recipe_ID) .'">';
-            echo '<select name="grocery_list_select" id="grocery_list_select">';
+            echo '<select name="grocery_list_select">';
             echo '<option value="">--Please choose a grocery list--</option>';
             foreach ($result4 as $row) {
                 $g_name = $row['grocery_list_name'];
@@ -296,19 +292,17 @@
             echo "insertion error";
         }
     } elseif (isset($_POST['submit_grocery_items'])) {
-        echo "here";
+        //echo "here";
         if ($result3) {
-            echo "line1";
+           // echo "line1";
             foreach ($result3 as $row) {
-                echo "line2";
+            //    echo "line2";
                 if ($_POST[$row["ingredient_ID"]]) {
-                    echo "line3";
+              //      echo "lin3";
                     $ing_ID = $row["ingredient_ID"];
                     $id_grocery = $_POST['grocery_list_select'];
                     $sql_comment1= $db->prepare("INSERT INTO Contains (grocery_List_ID, ingredient_ID) VALUES ($id_grocery, $ing_ID)");
-                    echo "line4";
-                    echo $ing_ID;
-                    echo $id_grocery;
+                //    echo "line4";
                     if ($sql_comment1->execute())  {
                         echo "ingredient inserted successfully ";
                     } else {
@@ -319,10 +313,12 @@
 }
     } elseif (isset($_POST['add_grocery_list'])) {
         $grocery_list_name = $_POST["g_list_name"];
-        echo $grocery_list_name;
+       /// echo $grocery_list_name;
          $sql_g_list_name= $db->prepare("INSERT INTO Grocery_List (grocery_list_name) VALUES ('$grocery_list_name')");
 
+       // echo "he12";
         $sql_g_list_name->execute();
+        //echo "heep";
         $grocery_list_ID = $db->lastInsertId();
         $username = $_SESSION["username"];
         $sql_g_list_create_new= $db->prepare("INSERT INTO Create_New (grocery_List_ID, username) VALUES ($grocery_list_ID,'$username')");
@@ -337,21 +333,40 @@
             </script>
     <?php
         } else {
-            echo "Grocery list creation error";
+            echo "grocery list creation error";
         }
 
 
 } elseif(isset($_POST['update-saved'])) {
+   // echo "update saved";
     $user_id = $_SESSION["username"];
     $var = $_POST['save-recipe-check'];
     $recipe_ID = $_GET['recipe_ID'];
+    //if (isset($var)) {
+     //   echo "he12";
+    //    echo $recipe_ID;
+       // $user_id = $_SESSION["username"];
+      //  echo $user_id;
+        $sql_save_update= $db->prepare("INSERT INTO Saves (username, recipe_ID) VALUES ('$user_id', $recipe_ID)");
+      //  echo "he13";
+        $sql_save_update->execute();
+     //   echo "yes";
+   // }
+    // } else {
+    //     echo "keep";
+    //     $recipe_ID = $_GET['recipe_ID'];
+    //     //$username = $_SESSION["username"];
+    //     echo $user_id;
+    //     echo $recipe_ID;
 
-    $sql_save_update= $db->prepare("INSERT INTO Saves (username, recipe_ID) VALUES ('$user_id', $recipe_ID)");
-    $sql_save_update->execute();
+    //     $sql_save_update1= $db->prepare("DELETE FROM Saves WHERE username=$user_id AND recipe_ID=$recipe_ID)");  
+    //     $sql_save_update1->execute();     
+    //     echo "yup";    
+    // }
 }
     }
     
-$db->close();
+$conn->close();
 
 ?>
 
