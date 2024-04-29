@@ -320,7 +320,7 @@
     } elseif (isset($_POST['add_grocery_list'])) {
         $grocery_list_name = $_POST["g_list_name"];
         echo $grocery_list_name;
-         $sql_g_list_name= $db->prepare("INSERT INTO Grocery_List (number_Of_Items, grocery_list_name) VALUES (0, '$grocery_list_name')");
+         $sql_g_list_name= $db->prepare("INSERT INTO Grocery_List (grocery_list_name) VALUES ('$grocery_list_name')");
 
         $sql_g_list_name->execute();
         $grocery_list_ID = $db->lastInsertId();
